@@ -11,14 +11,14 @@
     cursor: move;
 }
 
-html {
+/* html {
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
 html::-webkit-scrollbar {
     display: none;
-}
+} */
 
 /* 滚动条样式 */
 .custom-scrollbar::-webkit-scrollbar {
