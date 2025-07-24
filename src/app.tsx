@@ -1,10 +1,11 @@
+import Page1 from "./Page1/Page1"
 
 
 function App() {
     return (
-        <>
-            <div className="bg-amber-500">test</div>
-        </>
+        <div>
+            <Page1 />         
+        </div>
     )
 }
 
