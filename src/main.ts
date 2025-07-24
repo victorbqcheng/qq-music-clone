@@ -14,6 +14,7 @@ const createWindow = () => {
     height: 685,
     minWidth: 1050,
     minHeight: 685,
+    alwaysOnTop: true,
     frame: true,
     // titleBarStyle: 'hidden',
     webPreferences: {
