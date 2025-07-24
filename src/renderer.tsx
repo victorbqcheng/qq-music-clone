@@ -26,6 +26,19 @@
  * ```
  */
 
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client';
+import App from './app';
 import './index.css';
+
+
+// const root = createRoot(document.body);
+// root.render(<h2>Hello from React!</h2>);
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+)
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
