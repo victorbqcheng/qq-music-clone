@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import SetupIPCHandlers from './MainProcess/SetupIPCHandlers';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -16,7 +17,7 @@ const createWindow = () => {
     minHeight: 690,
     alwaysOnTop: true,
     frame: true,
-    // titleBarStyle: 'hidden',
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -31,6 +32,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
+  SetupIPCHandlers();
 };
 
 // This method will be called when Electron has finished

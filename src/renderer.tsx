@@ -30,6 +30,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client';
 import App from './app';
 import './index.css';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
 
 // const root = createRoot(document.body);
@@ -37,7 +38,23 @@ import './index.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<App />}>
+                    <Route index element={<div>首页</div>} />
+                    <Route path="explore" element={<div>乐馆</div>} />
+                    <Route path="favorite" element={<div>最爱</div>} />
+                    <Route path="recently-played" element={<div>最近播放</div>} />
+                    <Route path="local-and-download" element={<div>本地和下载</div>} />
+                    <Route path="trial" element={<div>试用</div>} />
+                    <Route path="custome-playlist/:id" element={<div>自建歌单</div>} />
+
+                    {/* Add a 404 route */}
+                    <Route path="*" element={<div>404 Not Found</div>} />
+
+                </Route>
+            </Routes>
+        </BrowserRouter>
   </StrictMode>
 )
 

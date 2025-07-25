@@ -2,13 +2,10 @@
 
 .my-drag{
     -webkit-app-region: drag;
-    width: 100%;
-    height: 30px;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: move;
+}
+
+.my-no-drag{
+    -webkit-app-region: no-drag;
 }
 
 /* html {
