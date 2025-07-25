@@ -30,7 +30,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client';
 import App from './app';
 import './index.css';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { HashRouter, Route, Routes } from 'react-router';
 import Home from './Page1/Right/Main/Home/Home';
 import Favorite from './Page1/Right/Main/Favorite/Favorite';
 import RecentlyPlayed from './Page1/Right/Main/RecentlyPlayed/RecentlyPlayed';
@@ -42,7 +42,7 @@ import LocalAndDownload from './Page1/Right/Main/LocalAndDownload/LocalAndDownlo
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
             <Routes>
                 <Route path="/" element={<App />}>
                     <Route index element={<Home />} />
@@ -58,7 +58,7 @@ createRoot(document.getElementById('root')).render(
 
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
   </StrictMode>
 )
 
