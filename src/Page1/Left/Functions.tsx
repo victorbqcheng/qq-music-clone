@@ -1,14 +1,18 @@
 import React from 'react'
 import { SlHome } from "react-icons/sl";
 import { PiCompass } from "react-icons/pi";
+import { Link, useLocation } from 'react-router';
 
 const Functions = () => {
-
+    const location = useLocation();
+    const select = (path: string):boolean => {
+        return location.pathname === path;
+    };
     return (
         <>
             <div className='grid grid-cols-2 gap-2'>
-                <FunctionItem icon={<SlHome />} selected={true} />
-                <FunctionItem icon={<PiCompass className='w-5 h-5' />} />
+                <Link to="/"><FunctionItem icon={<SlHome />} selected={select("/")} /></Link>
+                <Link to="/explore"><FunctionItem icon={<PiCompass className='w-5 h-5' />} selected={select("/explore")} /></Link>
             </div>
             {/* spacer */}
             <div className='h-4' />

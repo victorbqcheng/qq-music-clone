@@ -13,8 +13,8 @@ const CustomPlayLists = () => {
                 <div className=' ml-auto text-gray-500 font-light hover:text-gray-900 p-2 cursor-pointer'>+</div>
             </div>
 
-            <PlayListItem name='默认列表' icon={<BsFileMusic className='w-6 h-6'/>}/>
-            <PlayListItem name='默认收藏' icon={<MdOutlineCollections className='w-6 h-6'/>} />
+            <PlayListItem link='/custome-playlist/1' name='默认列表' icon={<BsFileMusic className='w-6 h-6'/>}/>
+            <PlayListItem link='/custome-playlist/2' name='默认收藏' icon={<MdOutlineCollections className='w-6 h-6'/>} />
         </div>
     )
 }
