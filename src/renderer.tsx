@@ -31,6 +31,7 @@ import { createRoot } from 'react-dom/client';
 import App from './app';
 import './index.css';
 import { BrowserRouter, Route, Routes } from 'react-router';
+import Home from './Page1/Right/Main/Home/Home';
 
 
 // const root = createRoot(document.body);
@@ -41,7 +42,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
             <Routes>
                 <Route path="/" element={<App />}>
-                    <Route index element={<div>首页</div>} />
+                    <Route index element={<Home />} />
                     <Route path="explore" element={<div>乐馆</div>} />
                     <Route path="favorite" element={<div>最爱</div>} />
                     <Route path="recently-played" element={<div>最近播放</div>} />

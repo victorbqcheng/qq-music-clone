@@ -2,6 +2,7 @@ import React from 'react'
 import { Outlet } from 'react-router'
 import Header from './Header/Header'
 import Footer from './Footer/Footer'
+import Main from './Main/Main'
 
 const Right = () => {
     return (
@@ -9,7 +10,7 @@ const Right = () => {
             {/* drag region */}
             <div className=' absolute w-full h-16 top-0 left-0 my-drag'></div>
             <Header />
-            <Outlet />
+            <Main />
             <Footer />
         </div>
     )
