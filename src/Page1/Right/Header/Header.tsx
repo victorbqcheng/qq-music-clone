@@ -1,15 +1,17 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { SlRefresh } from "react-icons/sl";
 import { CiSearch } from "react-icons/ci";
-import { VscChromeMinimize, VscChromeMaximize, VscChromeClose } from "react-icons/vsc";
+import { VscChromeMinimize, VscChromeMaximize, VscChromeRestore, VscChromeClose } from "react-icons/vsc";
 import { PiArrowsInSimpleFill } from "react-icons/pi";
 import { useNavigate } from 'react-router';
+import { observer } from 'mobx-react-lite';
 
 
-const Header = () => {
+const Header = observer(() => {
     const navigate = useNavigate();
     const placeHolderRef = useRef<HTMLDivElement>(null);
+    const [isWindowMaximized, setIsWindowMaximized] = useState(false);
 
     const handleBack = () => {
         navigate(-1);
@@ -36,7 +38,14 @@ const Header = () => {
     const handleClose = () => {
         window.NativeAPI.closeWindow();
     }
-
+    useEffect(()=>{
+        window.NativeAPI.onMaximized(() => {
+            setIsWindowMaximized(true);
+        });
+        window.NativeAPI.onUnmaximized(() => {
+            setIsWindowMaximized(false);
+        });
+    }, []);
 
     return (
         <div className='h-14 bg-gray-100 flex items-center justify-start gap-4 overflow-hidden z-10'>
@@ -57,11 +66,15 @@ const Header = () => {
             <div className='flex flex-row items-center gap-2 text-gray-500 ml-auto my-no-drag'>
                 <PiArrowsInSimpleFill className='text-lg hover:text-gray-800' />
                 <VscChromeMinimize className='text-lg hover:text-gray-800' onClick={handleMinimize} />
-                <VscChromeMaximize className='text-lg hover:text-gray-800' onClick={handleMaximize} />
+                {
+                    isWindowMaximized ? 
+                    <VscChromeRestore className='text-lg hover:text-gray-800' onClick={handleMaximize} /> : 
+                    <VscChromeMaximize className='text-lg hover:text-gray-800' onClick={handleMaximize} />
+                }
                 <VscChromeClose className='text-lg hover:text-gray-800' onClick={handleClose} />
             </div>
         </div>
     )
-}
+});
 
 export default Header

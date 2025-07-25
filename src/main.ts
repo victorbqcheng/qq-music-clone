@@ -33,6 +33,13 @@ const createWindow = () => {
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
   SetupIPCHandlers();
+
+  mainWindow.on('maximize', ()=>{
+    mainWindow.webContents.send('window-maximized');
+  });
+  mainWindow.on('unmaximize', ()=>{
+    mainWindow.webContents.send('window-unmaximized');
+  });
 };
 
 // This method will be called when Electron has finished

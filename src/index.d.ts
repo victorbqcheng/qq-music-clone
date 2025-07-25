@@ -5,5 +5,8 @@ declare interface Window{
         minimizeWindow: () => void;
         maximizeWindow: () => void;
         closeWindow: () => void;
+
+        onMaximized: (callback: () => void) => void;
+        onUnmaximized: (callback: () => void) => void;
     };
 }
