@@ -2,6 +2,7 @@
 
 .my-drag{
     -webkit-app-region: drag;
+    /* z-index: 0; */
 }
 
 .my-no-drag{
@@ -36,4 +37,9 @@ html::-webkit-scrollbar {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(52, 152, 219, 0.8);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

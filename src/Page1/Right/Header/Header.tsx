@@ -48,7 +48,7 @@ const Header = observer(() => {
     }, []);
 
     return (
-        <div className='h-14 bg-gray-100 flex items-center justify-start gap-4 overflow-hidden z-10'>
+        <div className='h-14 bg-gray-100 flex items-center justify-start gap-4 overflow-hidden my-drag'>
             <FaChevronLeft className='my-no-drag' onClick={handleBack} />
             <FaChevronRight className='my-no-drag' onClick={handleForward} />
             <SlRefresh className='my-no-drag' />
