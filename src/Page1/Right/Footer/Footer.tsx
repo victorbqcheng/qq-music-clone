@@ -11,6 +11,7 @@ const Footer = observer(() => {
         console.log('Footer clicked:', e.currentTarget, e.target);
         if(e.target !== e.currentTarget) return;
         stateStore.setShowPage2(true);
+        stateStore.setMountPage2(true);
     };
 
     return (
