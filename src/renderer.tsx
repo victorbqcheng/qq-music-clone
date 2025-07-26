@@ -35,6 +35,7 @@ import Home from './Page1/Right/Main/Home/Home';
 import Favorite from './Page1/Right/Main/Favorite/Favorite';
 import RecentlyPlayed from './Page1/Right/Main/RecentlyPlayed/RecentlyPlayed';
 import LocalAndDownload from './Page1/Right/Main/LocalAndDownload/LocalAndDownload';
+import Trial from './Page1/Right/Main/Trial/Trial';
 
 
 // const root = createRoot(document.body);
@@ -50,7 +51,7 @@ createRoot(document.getElementById('root')).render(
                     <Route path="favorite" element={<Favorite />} />
                     <Route path="recently-played" element={<RecentlyPlayed />} />
                     <Route path="local-and-download" element={<LocalAndDownload />} />
-                    <Route path="trial" element={<div>试用</div>} />
+                    <Route path="trial" element={<Trial />} />
                     <Route path="custome-playlist/:id" element={<div>自建歌单</div>} />
 
                     {/* Add a 404 route */}
