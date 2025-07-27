@@ -3,10 +3,10 @@ import React from 'react'
 const Main = () => {
     return (
         <div className='flex-1 w-full overflow-y-auto flex flex-row'>
-            <div className='flex-1 overflow-y-auto'>
+            <div className='flex-1 overflow-y-auto bg-blue-300'>
                 <div className='flex flex-col h-4/5 overflow-y-auto'>
                     {
-                        Array.from({ length: 20 }, (_, i) => (
+                        Array.from({ length: 12 }, (_, i) => (
                             <div key={i} className='p-4 border-b border-gray-200'>
                                 Item {i + 1}
                             </div>
