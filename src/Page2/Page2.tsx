@@ -9,6 +9,7 @@ import Main from './Main/Main';
 const show: React.CSSProperties = {
     display: 'flex',
     animation: 'fadeIn 0.5s ease-in-out forwards',
+    zIndex: 0,
     
 };
 const hide: React.CSSProperties = {
@@ -18,7 +19,7 @@ const hide: React.CSSProperties = {
 
 const Page2 = observer(() => {
 
-    const fullscreenRef = useRef<HTMLDivElement>(null);
+    const divRef = useRef<HTMLDivElement>(null);
     const handleFullscreen = () => {
         // if (fullscreenRef.current) {
         //     fullscreenRef.current.requestFullscreen()
@@ -35,7 +36,12 @@ const Page2 = observer(() => {
     return (
         <div className={`absolute top-0 left-0 w-screen h-screen min-w-[870px] min-h-[690px] bg-gray-300 flex flex-col items-center justify-center text-gray-500 z-50 fadeIn`}
             style={stateStore.showPage2 ? show : hide}
-            ref={fullscreenRef}>
+            ref={divRef}
+            onAnimationEnd={(e) => {
+                if (e.animationName === 'fadeOut') {
+                    divRef.current.style.zIndex = '-1';         // 必须设置-1， 否则antd slider会影响Page1页面的元素
+                }
+            }}>
             <Header onFullscreen={handleFullscreen} />
 
             <Main />
