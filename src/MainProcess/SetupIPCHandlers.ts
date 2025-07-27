@@ -25,6 +25,16 @@ const SetupIPCHandlers = () => {
             focusedWindow.close();
         }
     });
+    ipcMain.on('fullscreen-window', () => {
+        const focusedWindow = BrowserWindow.getFocusedWindow();
+        if (focusedWindow) {
+            if (focusedWindow.isFullScreen()) {
+                focusedWindow.setFullScreen(false);
+            } else {
+                focusedWindow.setFullScreen(true);
+            }
+        }
+    });
 };
 
 export default SetupIPCHandlers;

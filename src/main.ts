@@ -40,6 +40,12 @@ const createWindow = () => {
   mainWindow.on('unmaximize', ()=>{
     mainWindow.webContents.send('window-unmaximized');
   });
+  mainWindow.on('enter-full-screen', ()=>{
+    mainWindow.webContents.send('window-fullscreen');
+  });
+  mainWindow.on('leave-full-screen', ()=>{
+    mainWindow.webContents.send('window-unfullscreen');
+  });
 };
 
 // This method will be called when Electron has finished

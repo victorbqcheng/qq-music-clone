@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('NativeAPI', {
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     maximizeWindow: () => ipcRenderer.send('maximize-window'),
     closeWindow: () => ipcRenderer.send('close-window'),
+    // fullscreenWindow: () => ipcRenderer.send('fullscreen-window'),
 
     onMaximized: (callback: () => void) => ipcRenderer.on('window-maximized', callback),
     onUnmaximized: (callback: () => void) => ipcRenderer.on('window-unmaximized', callback),
