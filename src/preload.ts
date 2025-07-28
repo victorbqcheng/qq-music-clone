@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('NativeAPI', {
     maximizeWindow: () => ipcRenderer.send('maximize-window'),
     closeWindow: () => ipcRenderer.send('close-window'),
     // fullscreenWindow: () => ipcRenderer.send('fullscreen-window'),
+    addFiles: () => ipcRenderer.invoke('add-files'),
 
     onMaximized: (callback: () => void) => ipcRenderer.on('window-maximized', callback),
     onUnmaximized: (callback: () => void) => ipcRenderer.on('window-unmaximized', callback),

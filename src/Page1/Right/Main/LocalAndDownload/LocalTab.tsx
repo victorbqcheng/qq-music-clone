@@ -5,13 +5,34 @@ import { MdOutlineAddBox } from "react-icons/md";
 import MusicCD from '../../../../assets/music-cd.webp'
 import singer1 from '../../../../assets/singer1.jpg'
 import { IoPlaySharp } from "react-icons/io5";
+import { observer } from 'mobx-react-lite';
+import localAudioStore from '../../../../store/localAudioStore';
+import { AudioFileInfo } from '../../../../types';
 
-const LocalTab = () => {
+const LocalTab = observer(() => {
+    return (
+        <div className='flex-1 bg-blue-200 flex flex-col localtab'>
+            {
+                localAudioStore.getLocalAudioFileCount() > 0 ? (
+                    <LocalSongsList />
+                ) : (
+                    <NoLocalSongs />
+                )
+            }
+        </div>
+    )
+});
 
+const NoLocalSongs = observer(() => {
+    const handleAddFiles = async () => {
+        const files = await window.NativeAPI.addFiles();
+        // console.log('添加的文件:', files);
+        localAudioStore.setLocalAudioFiles(files);
+    };
     const items: MenuProps['items'] = [
         {
             label: (
-                <div onClick={() => alert('添加歌曲')}>
+                <div onClick={() => handleAddFiles()}>
                     添加歌曲
                 </div>
             ),
@@ -26,20 +47,20 @@ const LocalTab = () => {
             key: '1',
         },
     ];
-
-    
-
     return (
-        <div className='flex-1 bg-blue-200 flex flex-col localtab'>
-            {/* 没有本地歌曲时的提示 */}
-            {/* <div className='flex-1 flex flex-col items-center justify-center h-full bg-orange-200'>
-                <img src={MusicCD} alt="Music CD" className='w-32 h-32' />
-                没有本地歌曲
-                <Dropdown menu={{ items }} trigger={['click']}>
-                    <Button icon={<MdOutlineAddBox />} >添加</Button>
-                </Dropdown>
-            </div> */}
-            {/* 本地歌曲列表 */}
+        <div className='flex-1 flex flex-col items-center justify-center h-full bg-orange-200'>
+            <img src={MusicCD} alt="Music CD" className='w-32 h-32' />
+            没有本地歌曲
+            <Dropdown menu={{ items }} trigger={['click']}>
+                <Button icon={<MdOutlineAddBox />} >添加</Button>
+            </Dropdown>
+        </div>
+    );
+});
+
+const LocalSongsList = observer(() => {
+    return (
+        <>
             <div className='sticky top-10 bg-gray-100 z-50'>
                 <div className='mb-4'>
                     <span>播放</span>
@@ -54,23 +75,26 @@ const LocalTab = () => {
                     <div className='w-10'>大小</div>
                 </div>
             </div>
-
             <div className='flex flex-col '>
                 {
-                    Array.from({ length: 20 }, (_, index) => (
-                        <SongItem key={index} index={index} />
+                    // Array.from({ length: 20 }, (_, index) => (
+                    //     <SongItem key={index} index={index} />
+                    // ))
+                    localAudioStore.localAudioFiles.map((file, index) => (
+                        <SongItem key={index} index={index} file={file} />
                     ))
                 }
             </div>
-        </div>
-    )
-}
+        </>
+    );
+});
 
 type SongItemProps = {
     index: number;
+    file?: AudioFileInfo;
 };
 
-const SongItem = ({ index }: SongItemProps) => {
+const SongItem = ({ index, file }: SongItemProps) => {
 
     const isEven = index % 2 === 0;
 
@@ -81,18 +105,18 @@ const SongItem = ({ index }: SongItemProps) => {
                 <div className='relative'>
                     <img src={singer1} alt="Song Cover" className='w-10 h-10 mr-2' />
                     <div className='text-green-400 opacity-0 absolute top-0 left-0 h-full w-full flex justify-center items-center'>
-                        <IoPlaySharp className='text-xl'  />
+                        <IoPlaySharp className='text-xl' />
                     </div>
                 </div>
                 <div className=''>
-                    <div className='text-sm font-light'>世界上最伤心的人: {index}</div>
-                    <div className='text-xs font-light'>常艾非</div>
+                    <div className='text-sm font-light'>{file?.title || '未知歌曲'}: {index}</div>
+                    <div className='text-xs font-light'>{file?.artist || '未知艺术家'}</div>
                 </div>
             </div>
             {/* 专辑 */}
-            <div className='text-xs font-light flex-1'>专辑名</div>
-            <div className='text-xs font-light w-10'>时长</div>
-            <div className='text-xs font-light w-10'>大小</div>
+            <div className='text-xs font-light flex-1'>{file?.album || '未知专辑'}</div>
+            <div className='text-xs font-light w-10'>{file?.duration || 0}</div>
+            <div className='text-xs font-light w-10'>{file?.fileSize || 0}</div>
         </div>
     );
 };
