@@ -8,6 +8,8 @@ import { IoPlaySharp } from "react-icons/io5";
 import { observer } from 'mobx-react-lite';
 import localAudioStore from '../../../../store/localAudioStore';
 import { AudioFileInfo } from '../../../../types';
+import { usePlayer } from '../../../../context/PlayerContext';
+import { formatFileSize, formatTime } from '../../../../lib/utils';
 
 const LocalTab = observer(() => {
     return (
@@ -62,7 +64,7 @@ const LocalSongsList = observer(() => {
     return (
         <>
             <div className='sticky top-10 bg-gray-100 z-50'>
-                <div className='mb-4'>
+                <div className='mb-4 flex flex-row gap-2'>
                     <span>播放</span>
                     <span>添加</span>
                     <span>批量操作</span>
@@ -72,7 +74,7 @@ const LocalSongsList = observer(() => {
                     <div className='flex-1'>歌名/歌手</div>
                     <div className='flex-1'>专辑名</div>
                     <div className='w-10'>时长</div>
-                    <div className='w-10'>大小</div>
+                    <div className='w-16'>大小</div>
                 </div>
             </div>
             <div className='flex flex-col '>
@@ -95,11 +97,15 @@ type SongItemProps = {
 };
 
 const SongItem = ({ index, file }: SongItemProps) => {
-
+    const { play, pause, state:{currentTime, volume, duration}, loadTrack, setVolume, seekTo } = usePlayer();
     const isEven = index % 2 === 0;
-
+    const handleDoubleClick = () => {
+        loadTrack(file?.filePath || '');
+        // play();
+    };
     return (
-        <div className={`flex flex-row items-center justify-between py-2 hover:bg-gray-200 ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}>
+        <div className={`flex flex-row items-center justify-between py-2 hover:bg-gray-200 ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}
+             onDoubleClick={handleDoubleClick}>
             {/* 歌名/歌手 */}
             <div className='flex flex-row items-center justify-start flex-1'>
                 <div className='relative'>
@@ -115,8 +121,8 @@ const SongItem = ({ index, file }: SongItemProps) => {
             </div>
             {/* 专辑 */}
             <div className='text-xs font-light flex-1'>{file?.album || '未知专辑'}</div>
-            <div className='text-xs font-light w-10'>{file?.duration || 0}</div>
-            <div className='text-xs font-light w-10'>{file?.fileSize || 0}</div>
+            <div className='text-xs font-light w-10'>{formatTime(file?.duration)}</div>
+            <div className='text-xs font-light w-16'>{formatFileSize(file?.fileSize)}</div>
         </div>
     );
 };
