@@ -37,6 +37,7 @@ import RecentlyPlayed from './Page1/Right/Main/RecentlyPlayed/RecentlyPlayed';
 import LocalAndDownload from './Page1/Right/Main/LocalAndDownload/LocalAndDownload';
 import Trial from './Page1/Right/Main/Trial/Trial';
 import CustomPlayListPage from './Page1/Right/Main/CustomePlayList/CustomPlayListPage';
+import { PlayerContextProvider } from './context/PlayerContext';
 
 
 // const root = createRoot(document.body);
@@ -44,23 +45,25 @@ import CustomPlayListPage from './Page1/Right/Main/CustomePlayList/CustomPlayLis
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <HashRouter>
-            <Routes>
-                <Route path="/" element={<App />}>
-                    <Route index element={<Home />} />
-                    <Route path="explore" element={<div>乐馆</div>} />
-                    <Route path="favorite" element={<Favorite />} />
-                    <Route path="recently-played" element={<RecentlyPlayed />} />
-                    <Route path="local-and-download" element={<LocalAndDownload />} />
-                    <Route path="trial" element={<Trial />} />
-                    <Route path="custome-playlist/:id" element={<CustomPlayListPage />} />
+    <PlayerContextProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<Home />} />
+            <Route path="explore" element={<div>乐馆</div>} />
+            <Route path="favorite" element={<Favorite />} />
+            <Route path="recently-played" element={<RecentlyPlayed />} />
+            <Route path="local-and-download" element={<LocalAndDownload />} />
+            <Route path="trial" element={<Trial />} />
+            <Route path="custome-playlist/:id" element={<CustomPlayListPage />} />
 
-                    {/* Add a 404 route */}
-                    <Route path="*" element={<div>404 Not Found</div>} />
+            {/* Add a 404 route */}
+            <Route path="*" element={<div>404 Not Found</div>} />
 
-                </Route>
-            </Routes>
-        </HashRouter>
+          </Route>
+        </Routes>
+      </HashRouter>
+    </PlayerContextProvider>
   </StrictMode>
 )
 

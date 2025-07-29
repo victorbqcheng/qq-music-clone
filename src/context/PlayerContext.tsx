@@ -1,0 +1,111 @@
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+
+type PlayerState = {
+    currentTrack: string | null;
+    isPlaying: boolean;
+    volume: number;
+    duration: number;
+    currentTime: number;
+};
+
+type PlayerContextType = {
+    state: PlayerState;
+    audioRef: React.RefObject<HTMLAudioElement | null>;
+    loadTrack: (track: string) => void;
+    play: () => void;
+    pause: () => void;
+    setVolume: (volume: number) => void;
+    seekTo: (time: number) => void;
+};
+
+const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
+
+export const PlayerContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const [state, setState] = useState<PlayerState>({
+        currentTrack: null,
+        isPlaying: false,
+        volume: 0.7,
+        duration: 0,
+        currentTime: 0,
+    });
+    const loadTrack = (track: string) => {
+        setState(prevState => ({
+            ...prevState,
+            currentTrack: track,
+        }));
+        if (audioRef.current) {
+            audioRef.current.src = `file://${track}`;
+            audioRef.current.load();
+        }
+    };
+    const play = () => {
+        if (audioRef.current && state.currentTrack) {
+            audioRef.current.play();
+            setState(prevState => ({ ...prevState, isPlaying: true }));
+        }
+    };
+    const pause = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            setState(prevState => ({ ...prevState, isPlaying: false }));
+        }
+    };
+    const setVolume = (volume: number) => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume;
+            setState(prevState => ({ ...prevState, volume }));
+        }
+    };
+    const seekTo = (time: number) => {
+        if (audioRef.current) {
+            audioRef.current.currentTime = time;
+            setState(prevState => ({ ...prevState, currentTime: time }));
+        }
+    };
+    
+    useEffect(()=>{
+        const audio = audioRef.current;
+        if (!audio) return;
+        const updateCurrentTime = () => {
+            if (audioRef.current) {
+                setState(prevState => ({ ...prevState, currentTime: audioRef.current.currentTime }));
+            }
+        };
+        const durationChange = () =>{
+            if (audioRef.current) {
+                setState(prevState => ({ ...prevState, duration: audioRef.current.duration }));
+            }
+        };
+        audio.addEventListener('timeupdate', updateCurrentTime);
+        audio.addEventListener('durationchange', durationChange);
+        audio.volume = state.volume; // Set initial volume
+        return () => {
+            audio.removeEventListener('timeupdate', updateCurrentTime);
+            audio.removeEventListener('durationchange', durationChange);
+        };
+    }, []);
+
+    return (
+        <PlayerContext.Provider value={{
+            state,
+            audioRef,
+            loadTrack,
+            play,
+            pause,
+            setVolume,
+            seekTo
+        }}>
+            {children}
+            <audio ref={audioRef} autoPlay />
+        </PlayerContext.Provider>
+    )
+};
+
+export const usePlayer = () => {
+    const context = useContext(PlayerContext);
+    if (context === undefined) {
+        throw new Error('usePlayer must be used within a PlayerProvider');
+    }
+    return context;
+};
