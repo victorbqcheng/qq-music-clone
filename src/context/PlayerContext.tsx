@@ -77,12 +77,22 @@ export const PlayerContextProvider: React.FC<{ children: React.ReactNode }> = ({
                 setState(prevState => ({ ...prevState, duration: audioRef.current.duration }));
             }
         };
+        const onPlaying = () => {
+            setState(prevState => ({ ...prevState, isPlaying: true }));
+        };
+        const onPause = () => {
+            setState(prevState => ({ ...prevState, isPlaying: false }));
+        };
         audio.addEventListener('timeupdate', updateCurrentTime);
         audio.addEventListener('durationchange', durationChange);
+        audio.addEventListener('playing', onPlaying);
+        audio.addEventListener('pause', onPause);
         audio.volume = state.volume; // Set initial volume
         return () => {
             audio.removeEventListener('timeupdate', updateCurrentTime);
             audio.removeEventListener('durationchange', durationChange);
+            audio.removeEventListener('playing', onPlaying);
+            audio.removeEventListener('pause', onPause);
         };
     }, []);
 
