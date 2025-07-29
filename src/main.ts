@@ -15,12 +15,16 @@ const createWindow = () => {
     height: 690,
     minWidth: 1050,
     minHeight: 690,
-    alwaysOnTop: true,
+    // alwaysOnTop: true,
     frame: true,
-    titleBarStyle: 'hidden',
+    // titleBarStyle: 'hidden',
     webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
     },
+    show: false
   });
 
   // and load the index.html of the app.
@@ -29,7 +33,9 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
-
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
   SetupIPCHandlers();
