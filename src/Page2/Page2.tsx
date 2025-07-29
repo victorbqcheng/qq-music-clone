@@ -9,7 +9,7 @@ import Main from './Main/Main';
 const show: React.CSSProperties = {
     display: 'flex',
     animation: 'fadeIn 0.5s ease-in-out forwards',
-    zIndex: 0,
+    zIndex: 50,
     
 };
 const hide: React.CSSProperties = {
