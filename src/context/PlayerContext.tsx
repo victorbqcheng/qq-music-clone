@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { AudioFileInfo } from '../types';
 
 type PlayerState = {
-    currentTrack: string | null;
+    currentTrack: AudioFileInfo | null;
     isPlaying: boolean;
     volume: number;
     duration: number;
@@ -11,7 +12,7 @@ type PlayerState = {
 type PlayerContextType = {
     state: PlayerState;
     audioRef: React.RefObject<HTMLAudioElement | null>;
-    loadTrack: (track: string) => void;
+    loadTrack: (track: AudioFileInfo) => void;
     play: () => void;
     pause: () => void;
     setVolume: (volume: number) => void;
@@ -29,13 +30,13 @@ export const PlayerContextProvider: React.FC<{ children: React.ReactNode }> = ({
         duration: 0,
         currentTime: 0,
     });
-    const loadTrack = (track: string) => {
+    const loadTrack = (track: AudioFileInfo) => {
         setState(prevState => ({
             ...prevState,
             currentTrack: track,
         }));
         if (audioRef.current) {
-            audioRef.current.src = `file://${track}`;
+            audioRef.current.src = `file://${track.filePath}`;
             audioRef.current.load();
         }
     };

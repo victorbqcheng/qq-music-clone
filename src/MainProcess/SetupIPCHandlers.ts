@@ -14,6 +14,7 @@ const getAudioFileInfo = async (filePath: string): Promise<AudioFileInfo> => {
             artist: metadata.common.artist || '未知艺术家',
             album: metadata.common.album || '未知专辑',
             duration: metadata.format.duration || 0,
+            fileName: path.basename(filePath, path.extname(filePath)),
             filePath: filePath,
             img: metadata.common.picture ? `data:${metadata.common.picture[0].format};base64,${uint8ArrayToBase64(metadata.common.picture[0].data)}` : null,
             fileSize: fs.statSync(filePath).size,
@@ -26,6 +27,7 @@ const getAudioFileInfo = async (filePath: string): Promise<AudioFileInfo> => {
             artist: '未知艺术家',
             album: '未知专辑',
             duration: 0,
+            fileName: path.basename(filePath, path.extname(filePath)),
             filePath: filePath,
             img: null,
             fileSize: 0

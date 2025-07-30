@@ -100,7 +100,7 @@ const SongItem = ({ index, file }: SongItemProps) => {
     const { play, pause, state:{currentTime, volume, duration}, loadTrack, setVolume, seekTo } = usePlayer();
     const isEven = index % 2 === 0;
     const handleDoubleClick = () => {
-        loadTrack(file?.filePath || '');
+        loadTrack(file);
         // play();
     };
     return (

@@ -4,6 +4,7 @@ export declare interface AudioFileInfo {
     artist: string;
     album: string;
     duration: number;
+    fileName: string;
     filePath: string;
     img: string | null;
     fileSize: number;
