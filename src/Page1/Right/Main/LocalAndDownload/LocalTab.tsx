@@ -29,7 +29,10 @@ const NoLocalSongs = observer(() => {
     const handleAddFiles = async () => {
         const files = await window.NativeAPI.addFiles();
         // console.log('添加的文件:', files);
-        localAudioStore.setLocalAudioFiles(files);
+        if (files && files.length > 0) {
+            localAudioStore.addLocalAudioFiles(files);
+        }
+        
     };
     const items: MenuProps['items'] = [
         {
@@ -61,14 +64,26 @@ const NoLocalSongs = observer(() => {
 });
 
 const LocalSongsList = observer(() => {
+    const handleAddFiles = async () => {
+        const files = await window.NativeAPI.addFiles();
+        // console.log('添加的文件:', files);
+        if (files && files.length > 0) {
+            localAudioStore.addLocalAudioFiles(files);
+        }
+    };
+
+    const handleClearFiles = ()=>{
+        localAudioStore.clearLocalAudioFiles();
+    };
+
     return (
         <>
             <div className='sticky top-10 bg-gray-100 z-50'>
                 <div className='mb-4 flex flex-row gap-2'>
                     <span>播放</span>
-                    <span>添加</span>
+                    <span className='cursor-pointer' onClick={handleAddFiles}>添加</span>
                     <span>批量操作</span>
-                    <span>清空</span>
+                    <span className='cursor-pointer' onClick={handleClearFiles}>清空</span>
                 </div>
                 <div className='flex flex-row items-center justify-between text-xs font-light'>
                     <div className='flex-1'>歌名/歌手</div>

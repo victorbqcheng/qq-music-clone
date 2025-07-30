@@ -21,9 +21,21 @@ class LocalAudioStore{
             localStorage.removeItem('localAudioFiles');
         }
     }
-    addLocalAudioFile(file: AudioFileInfo) {
-        this.localAudioFiles.push(file);
+    addLocalAudioFiles(files: AudioFileInfo[]) {
+        this.localAudioFiles.push(...files);
+        // 去重
+        this.localAudioFiles = Array.from(new Set(this.localAudioFiles.map(file => file.filePath)))
+            .map(filePath => this.localAudioFiles.find(file => file.filePath === filePath) as AudioFileInfo);
+        // 更新本地存储
         localStorage.setItem('localAudioFiles', JSON.stringify(this.localAudioFiles));
+    }
+    addLocalAudioFile(file: AudioFileInfo) {
+        // 检查是否已存在
+        const exists = this.localAudioFiles.some(existingFile => existingFile.filePath === file.filePath);
+        if (!exists) {
+            this.localAudioFiles.push(file);
+            localStorage.setItem('localAudioFiles', JSON.stringify(this.localAudioFiles));
+        }
     }
     removeLocalAudioFile(filePath: string) {
         this.localAudioFiles = this.localAudioFiles.filter(file => file.filePath !== filePath);
