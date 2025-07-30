@@ -1,6 +1,6 @@
 import React, { type MouseEvent } from 'react'
 import Interactions from './Interactions'
-import Controlbar from './Controlbar'
+import Controlbar from '../../../components/Controlbar'
 import Utils from './Utils'
 import stateStore from '../../../store/stateStore'
 import { observer } from 'mobx-react-lite'

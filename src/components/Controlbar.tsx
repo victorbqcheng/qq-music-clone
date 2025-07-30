@@ -4,8 +4,8 @@ import { TfiLoop } from "react-icons/tfi";
 import { AiOutlineStepForward, AiOutlineStepBackward } from "react-icons/ai";
 import { IoPlaySharp, IoPauseSharp } from "react-icons/io5";
 import { RxSpeakerModerate } from "react-icons/rx";
-import { usePlayer } from '../../../context/PlayerContext';
-import { formatTime } from '../../../lib/utils';
+import { usePlayer } from '../context/PlayerContext';
+import { formatTime } from '../lib/utils';
 
 const style: React.CSSProperties = {
     display: 'inline-block',
