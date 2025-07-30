@@ -124,7 +124,7 @@ const SongItem = ({ index, file }: SongItemProps) => {
             {/* 歌名/歌手 */}
             <div className='flex flex-row items-center justify-start flex-1'>
                 <div className='relative'>
-                    <img src={singer1} alt="Song Cover" className='w-10 h-10 mr-2' />
+                    <img src={file.img || singer1} alt="Song Cover" className='w-10 h-10 mr-2' />
                     <div className='text-green-400 opacity-0 absolute top-0 left-0 h-full w-full flex justify-center items-center'>
                         <IoPlaySharp className='text-xl' />
                     </div>
