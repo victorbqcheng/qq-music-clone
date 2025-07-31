@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import LyricsDisplay from './LyricsDisplay';
 import album1 from '../../assets/album1.jpg';
+import defaultCover from '../../assets/default-cover.png';
 import Cover from './Cover';
 import { usePlayer } from '../../context/PlayerContext';
 
@@ -30,7 +31,7 @@ import { usePlayer } from '../../context/PlayerContext';
 const Main = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const rotateDivRef = useRef<HTMLDivElement>(null);
-    const {state:{isPlaying}} = usePlayer();
+    const {state:{isPlaying, currentTrack}} = usePlayer();
     useEffect(()=>{
         if(rotateDivRef.current){
             rotateDivRef.current.style.animationPlayState = isPlaying ? 'running' : 'paused';
@@ -41,7 +42,7 @@ const Main = () => {
         <div className='flex-1 w-full overflow-y-auto flex flex-row bg-[#808080]'>
             <div className='flex-1 flex items-center justify-center'>
                 <div ref={rotateDivRef} className='w-96 h-96' style={{animation: 'rotate 10s linear infinite'}}>
-                    <Cover imageUrl={album1} />
+                    <Cover imageUrl={currentTrack?.img || defaultCover} />
                 </div>
             </div>
             <div className='flex-1 flex flex-col items-center justify-center'>

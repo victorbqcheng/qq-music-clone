@@ -1,5 +1,5 @@
 import React from 'react'
-import cover from '../../assets/cover.png'
+import cover from '../../assets/cover-mask.png'
 
 type CoverProps = {
     imageUrl?: string;
