@@ -2,8 +2,9 @@ import React from 'react'
 import type { MenuProps } from 'antd';
 import { Dropdown, Space, Button } from 'antd';
 import { MdOutlineAddBox } from "react-icons/md";
+import { CiCircleMore } from "react-icons/ci";
 import MusicCD from '../../../../assets/music-cd.webp'
-import singer1 from '../../../../assets/singer1.jpg'
+import defaultCover from '../../../../assets/default-cover.png';
 import { IoPlaySharp } from "react-icons/io5";
 import { observer } from 'mobx-react-lite';
 import localAudioStore from '../../../../store/localAudioStore';
@@ -87,6 +88,7 @@ const LocalSongsList = observer(() => {
                 </div>
                 <div className='flex flex-row items-center justify-between text-xs font-light'>
                     <div className='flex-1'>歌名/歌手</div>
+                    <div className='w-25'></div>    {/*操作图标*/}
                     <div className='flex-1'>专辑名</div>
                     <div className='w-10'>时长</div>
                     <div className='w-16'>大小</div>
@@ -119,12 +121,12 @@ const SongItem = ({ index, file }: SongItemProps) => {
         // play();
     };
     return (
-        <div className={`flex flex-row items-center justify-between py-2 hover:bg-gray-200 ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}
+        <div className={`group flex flex-row items-center justify-between py-2 hover:bg-gray-200 ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}
              onDoubleClick={handleDoubleClick}>
             {/* 歌名/歌手 */}
             <div className='flex flex-row items-center justify-start flex-1'>
                 <div className='relative'>
-                    <img src={file.img || singer1} alt="Song Cover" className='w-10 h-10 mr-2' />
+                    <img src={file.img || defaultCover} alt="Song Cover" className='w-10 h-10 mr-2' />
                     <div className='text-green-400 opacity-0 absolute top-0 left-0 h-full w-full flex justify-center items-center'>
                         <IoPlaySharp className='text-xl' />
                     </div>
@@ -134,8 +136,14 @@ const SongItem = ({ index, file }: SongItemProps) => {
                     <div className='text-xs font-light'>{file?.artist || '未知艺术家'}</div>
                 </div>
             </div>
+            {/*操作图标*/}
+            <div className='w-25 flex flex-row items-center justify-center gap-2 opacity-0 group-hover:opacity-100'>
+                <MdOutlineAddBox className='text-gray-500 cursor-pointer' />
+                <CiCircleMore className='text-gray-500 cursor-pointer' />
+            </div>
             {/* 专辑 */}
             <div className='text-xs font-light flex-1'>{file?.album || '未知专辑'}</div>
+            
             <div className='text-xs font-light w-10'>{formatTime(file?.duration)}</div>
             <div className='text-xs font-light w-16'>{formatFileSize(file?.fileSize)}</div>
         </div>
