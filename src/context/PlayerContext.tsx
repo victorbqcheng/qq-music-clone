@@ -36,7 +36,7 @@ export const PlayerContextProvider: React.FC<{ children: React.ReactNode }> = ({
             currentTrack: track,
         }));
         if (audioRef.current) {
-            audioRef.current.src = `file://${track.filePath}`;
+            audioRef.current.src = track.filePath;
             audioRef.current.load();
         }
     };

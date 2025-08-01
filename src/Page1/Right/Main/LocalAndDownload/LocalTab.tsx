@@ -127,7 +127,7 @@ const SongItem = ({ index, file }: SongItemProps) => {
             <div className='flex flex-row items-center justify-start flex-1'>
                 <div className='relative'>
                     <img src={file.img || defaultCover} alt="Song Cover" className='w-10 h-10 mr-2' />
-                    <div className='text-green-400 opacity-0 absolute top-0 left-0 h-full w-full flex justify-center items-center'>
+                    <div className='absolute top-0 left-0 h-full w-full flex justify-center items-center opacity-0 group-hover:opacity-100 text-white hover:text-green-400'>
                         <IoPlaySharp className='text-xl' />
                     </div>
                 </div>
