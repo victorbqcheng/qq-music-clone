@@ -13,20 +13,20 @@ type HeaderProps = {
 const Header = ({ onFullscreen }: HeaderProps) => {
     const [isWindowMaximized, setIsWindowMaximized] = useState(false);
     const handleMinimize = () => {
-        window.NativeAPI.minimizeWindow();
+        window.NativeAPI?.minimizeWindow();
     }
     const handleMaximize = () => {
-        window.NativeAPI.maximizeWindow();
+        window.NativeAPI?.maximizeWindow();
     }
     const handleClose = () => {
-        window.NativeAPI.closeWindow();
+        window.NativeAPI?.closeWindow();
     }
 
     useEffect(() => {
-        window.NativeAPI.onMaximized(() => {
+        window.NativeAPI?.onMaximized(() => {
             setIsWindowMaximized(true);
         });
-        window.NativeAPI.onUnmaximized(() => {
+        window.NativeAPI?.onUnmaximized(() => {
             setIsWindowMaximized(false);
         });
     }, []);
