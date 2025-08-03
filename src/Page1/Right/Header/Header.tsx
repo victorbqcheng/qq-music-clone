@@ -49,8 +49,8 @@ const Header = observer(() => {
 
     return (
         <div className='h-14 bg-gray-100 flex items-center justify-start gap-4 overflow-hidden my-drag'>
-            <FaChevronLeft className='my-no-drag' onClick={handleBack} />
-            <FaChevronRight className='my-no-drag' onClick={handleForward} />
+            <FaChevronLeft className='my-no-drag cursor-pointer' onClick={handleBack} />
+            <FaChevronRight className='my-no-drag cursor-pointer' onClick={handleForward} />
             <SlRefresh className='my-no-drag' />
             <div className='relative flex flex-row items-center bg-gray-200 rounded-md p-1 my-no-drag'>
                 <div ref={placeHolderRef} className='absolute flex flex-row items-center gap-2 pointer-events-none'>

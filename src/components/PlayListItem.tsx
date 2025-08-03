@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import customPlayListsStore from '../store/customPlayListsStore';
 
 type PlayListItemProps = {
+    playListId?: string;
     name: string;
     icon?: React.ReactNode;
     selected?: boolean;
@@ -11,7 +12,7 @@ type PlayListItemProps = {
     showContextMenu?: boolean;
 };
 
-const PlayListItem = ({ name, icon, selected, link, showContextMenu }: PlayListItemProps) => {
+const PlayListItem = ({playListId, name, icon, selected, link, showContextMenu }: PlayListItemProps) => {
     const [isRenaming, setIsRenaming] = React.useState(false);
     const [inputValue, setInputValue] = React.useState(name);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -62,13 +63,13 @@ const PlayListItem = ({ name, icon, selected, link, showContextMenu }: PlayListI
             return;
         }
         // 检查是否已存在同名歌单
-        const existingPlayList = customPlayListsStore.getAllPlayLists().get(newName);
+        const existingPlayList = customPlayListsStore.isPlayListNameExists(newName);
         if (existingPlayList) {
             message.info(`歌单 "${newName}" 已存在，建议修改歌单名称`);
             setInputValue(name);
             return;
         }
-        customPlayListsStore.renamePlayList(name, newName);
+        customPlayListsStore.renamePlayList(playListId, name, newName);
     };
     // Enter 键重命名
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

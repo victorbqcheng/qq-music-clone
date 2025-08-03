@@ -1,53 +1,101 @@
 import { makeAutoObservable } from "mobx";
 import { AudioFileInfo } from "../types";
 
-class CustomPlayListsStore {
+type CustomPlayList = {
+    name: string;
+    files: AudioFileInfo[];
+};
 
-    customPlayLists: Map<string, AudioFileInfo[]> = new Map();
+class CustomPlayListsStore {
+    // id作为键
+    customPlayLists: Map<string, CustomPlayList> = new Map();
 
     constructor() {
         makeAutoObservable(this);
-        const customPlayLists = localStorage.getItem('customPlayLists');
-        console.log('customPlayLists', customPlayLists);
-        if (customPlayLists) {
-            this.customPlayLists = new Map(JSON.parse(customPlayLists) as [string, AudioFileInfo[]][]);            
-            console.log('this.customPlayLists', this.customPlayLists);
-           
+        this.loadPlayListsFromLocalStorage();
+    }
+    addPlayList(name: string, files: AudioFileInfo[]):string|null {
+        
+        // 检查名称是否已存在
+        if (this.isPlayListNameExists(name)) {
+            return null; // 名称已存在，返回null
         }
+
+        // 生成一个随机的唯一ID
+        const id = Date.now().toString(36) + Math.random().toString(36).substring(2, 15);
+        this.customPlayLists.set(id, { name, files });
+        this.savePlayListsToLocalStorage();
+        return id; // 返回新添加的歌单ID
     }
-    addPlayList(name: string, files: AudioFileInfo[]) {
-        this.customPlayLists.set(name, files);
-        localStorage.setItem('customPlayLists', JSON.stringify(this.customPlayLists));
-    }
-    removePlayList(name: string) {
-        this.customPlayLists.delete(name);
-        localStorage.setItem('customPlayLists', JSON.stringify(this.customPlayLists));
+    removePlayList(name: string):void {
+        // 查找对应的歌单ID
+        for (const [id, playList] of this.customPlayLists.entries()) {
+            if (playList.name === name) {
+                this.customPlayLists.delete(id);
+                this.savePlayListsToLocalStorage();
+                return;
+            }
+        }
     }
     getPlayList(name: string): AudioFileInfo[] | undefined {
-        return this.customPlayLists.get(name);
-    }
-    getAllPlayLists(): Map<string, AudioFileInfo[]> {
-        return this.customPlayLists;
-    }
-    renamePlayList(oldName: string, newName: string) {
-        if (this.customPlayLists.has(newName)) {
-            alert(`歌单 "${newName}" 已存在，建议修改歌单名称`);
-            return;
+        for (const playList of this.customPlayLists.values()) {
+            if (playList.name === name) {
+                return playList.files;
+            }
         }
-        const files = this.customPlayLists.get(oldName);
-        if (files) {
-            this.customPlayLists.delete(oldName);
-            this.customPlayLists.set(newName, files);
-            localStorage.setItem('customPlayLists', JSON.stringify(this.customPlayLists));
+        return undefined;
+    }
+    getAllPlayLists(): Map<string, CustomPlayList> {
+        return this.customPlayLists
+    }
+    renamePlayList(id: string, oldName: string, newName: string):boolean {
+        // 检查新名称是否已存在
+        for (const [_id, _playList] of this.customPlayLists.entries()) {
+            if (_playList.name === newName && _id !== id) {
+                return false; // 新名称已存在，重命名失败
+            }
+        }
+        // 更新歌单名称
+        const playList = this.customPlayLists.get(id);
+        if (playList) {
+            playList.name = newName;
+            this.customPlayLists.set(id, playList);
+            this.savePlayListsToLocalStorage();
+            return true; // 重命名成功
         }
     }
     // 找到下一个默认的歌单名称
     getNextDefaultPlayListName(): string {
         let index = 1;
-        while (this.customPlayLists.has(`新建歌单${index}`)) {
+        let names = new Set<string>();
+        for (const playList of this.customPlayLists.values()) {
+            names.add(playList.name);
+        }
+        while (names.has(`新建歌单${index}`)) {
             index++;
         }
         return `新建歌单${index}`;
+    }
+    // 歌单名称是否已经存在
+    isPlayListNameExists(name: string): boolean {
+        for (const playList of this.customPlayLists.values()) {
+            if (playList.name === name) {
+                return true; // 名称已存在
+            }
+        }
+        return false; // 名称不存在
+    }
+
+    private savePlayListsToLocalStorage():void {
+        const mapObj = Object.fromEntries(this.customPlayLists);
+        localStorage.setItem('customPlayLists', JSON.stringify(mapObj));
+    }
+    private loadPlayListsFromLocalStorage():void {
+        const customPlayLists = localStorage.getItem('customPlayLists');
+        if (customPlayLists) {
+            const parsedPlayLists = JSON.parse(customPlayLists) as Map<string, CustomPlayList>;
+            this.customPlayLists = new Map(Object.entries(parsedPlayLists));
+        }
     }
     
 };

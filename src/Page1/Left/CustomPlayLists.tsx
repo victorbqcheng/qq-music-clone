@@ -1,33 +1,43 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { message } from 'antd';
 import { BsFileMusic } from "react-icons/bs";
 import { MdOutlineCollections } from "react-icons/md";
 import customPlayListsStore from '../../store/customPlayListsStore';
 import PlayListItem from '../../components/PlayListItem';
 import { observer } from 'mobx-react-lite';
+import { useParams } from 'react-router';
 
 
 const CustomPlayLists = observer(() => {
-    const [isCreateintNewItem, setIsCreatingNewItem] = React.useState(false);
+    const [isCreateintNewItem, setIsCreatingNewItem] = useState(false);
+
+    // 获取路由参数
+    const params = useParams();
+    const id = params.id;
+    const selected = (playListId: string) => {
+        return playListId === id;
+    };
+
     const handleCreateNewItem = () => {
         setIsCreatingNewItem(true);
     };
     const handleBlur = (name: string) => {
         setIsCreatingNewItem(false);
         if (name.trim() === '') {
-            alert('歌单名称不能为空');
+            message.info('歌单名称不能为空');
             const defaultName = customPlayListsStore.getNextDefaultPlayListName();
             customPlayListsStore.addPlayList(defaultName, []);
         } else {
             // 检查是否已存在同名歌单
-            const existingPlayList = customPlayListsStore.getAllPlayLists().get(name);
+            const existingPlayList = customPlayListsStore.isPlayListNameExists(name);
+            // 如果存在同名歌单，则提示用户并使用默认名称
             if (existingPlayList) {
-                alert(`歌单 "${name}" 已存在，建议修改歌单名称`);
+                message.info(`歌单 "${name}" 已存在，建议修改歌单名称`);
                 // 如果存在同名歌单，则使用默认名称
                 name = customPlayListsStore.getNextDefaultPlayListName();
             }
             customPlayListsStore.addPlayList(name, []);
         }
-
     }
 
     return (
@@ -39,11 +49,12 @@ const CustomPlayLists = observer(() => {
                     onClick={handleCreateNewItem}>+</div>
             </div>
             {isCreateintNewItem && <CreateNewItem onBlur={handleBlur} name={customPlayListsStore.getNextDefaultPlayListName()} />}
+            
             {
-                // 倒序添加
-                Array.from(customPlayListsStore.getAllPlayLists().keys()).reverse().map((name) => (
-                    <PlayListItem key={name} link={`/custome-playlist/${name}`} name={name} icon={<BsFileMusic className='w-6 h-6' />} />
+                Array.from(customPlayListsStore.getAllPlayLists().entries()).reverse().map(([playListId, playList]) => (
+                    <PlayListItem key={playListId} playListId={playListId} link={`/custome-playlist/${playListId}`} name={playList.name} selected={selected(playListId)} icon={<BsFileMusic className='w-6 h-6' />} />
                 ))
+
             }
             <PlayListItem link='/custome-playlist/1' name='默认列表' icon={<BsFileMusic className='w-6 h-6' />} />
             <PlayListItem link='/custome-playlist/2' name='默认收藏' icon={<MdOutlineCollections className='w-6 h-6' />} />
