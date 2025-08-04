@@ -15,7 +15,6 @@ class CustomPlayListsStore {
         this.loadPlayListsFromLocalStorage();
     }
     addPlayList(name: string, files: AudioFileInfo[]):string|null {
-        
         // 检查名称是否已存在
         if (this.isPlayListNameExists(name)) {
             return null; // 名称已存在，返回null
@@ -88,6 +87,15 @@ class CustomPlayListsStore {
             }
         }
         return false; // 名称不存在
+    }
+    // 添加文件到歌单
+    addFileToPlayList(id: string, file: AudioFileInfo): void {
+        const playList = this.customPlayLists.get(id);
+        if (playList) {
+            playList.files = [file, ...playList.files];
+            this.customPlayLists.set(id, playList);
+            this.savePlayListsToLocalStorage();
+        }
     }
 
     private savePlayListsToLocalStorage():void {

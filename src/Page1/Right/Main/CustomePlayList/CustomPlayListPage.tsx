@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { useLocation, useParams } from 'react-router'
-import singer1 from '../../../../assets/singer1.jpg'
+import { useParams } from 'react-router'
+import defaultCover from '../../../../assets/default-cover.png'
 import IconButton from '../../../../components/IconButton';
 import { IoPlaySharp } from "react-icons/io5";
 import { BiSolidCloudDownload } from "react-icons/bi";
@@ -8,17 +8,14 @@ import { PiListChecksLight } from "react-icons/pi";
 import { RiShareCircleLine } from "react-icons/ri";
 import customPlayListsStore, { CustomPlayList } from '../../../../store/customPlayListsStore';
 import { observer } from 'mobx-react-lite';
-import PlayListItem from '../../../../components/PlayListItem';
 import SongItem from '../../../../components/SongItem';
 
 const CustomPlayListPage = observer(() => {
-    // const location = useLocation();
-    // console.log('Current location:', location);
     const params = useParams();
     const id = params.id;
     const [showStickyHeader, setShowStickyHeader] = React.useState(false);
     const playList = customPlayListsStore.getPlayListById(id)
-    
+
 
     const height140: React.CSSProperties = {
         height: '140px'
@@ -28,15 +25,15 @@ const CustomPlayListPage = observer(() => {
     };
 
     return (
-        <div className='bg-green-200 h-full min-h-full flex flex-col overflow-y-auto custom-scrollbar'
+        <div className='h-full min-h-full flex flex-col overflow-y-auto custom-scrollbar'
             onScroll={(e) => {
                 setShowStickyHeader(e.currentTarget.scrollTop > 112);
             }}>
 
             {
-                <div className={`flex flex-row shrink-0 w-full  bg-gray-100`}
+                <div className={`flex flex-row shrink-0 w-full bg-gray-100`}
                     style={showStickyHeader ? height112 : height140}>
-                    <img src={singer1} className='w-35 h-35' />
+                    <img src={defaultCover} className='w-35 h-35' />
                     <div className='flex flex-col justify-between px-4'>
                         <h1 className='text-2xl font-bold'>{playList?.name}</h1>
                         <div className='font-light text-xs'>添加标签</div>
@@ -61,19 +58,22 @@ const CustomPlayListPage = observer(() => {
                     </div>
                 )
             }
-            
-            <div className='flex-1 flex flex-col items-center justify-center bg-orange-200'>
+
+            <div className='flex-1'>
                 {
                     playList?.files.length === 0 && (
-                        <div className='text-2xl font-bold'>暂无歌曲</div>
+                        <div className='flex flex-col items-center justify-center h-full'>
+                            <div className='text-2xl font-bold'>暂无歌曲</div>
+                        </div>
                     )
                 }
                 {
                     playList?.files.map((file, index) => (
-                        <SongItem key={index} index={index} file={file} />
+                        <div key={index} className='w-full'>
+                            <SongItem key={index} index={index} file={file} />
+                        </div>
                     ))
                 }
-                
             </div>
         </div>
     )

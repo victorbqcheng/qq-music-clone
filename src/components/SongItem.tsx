@@ -5,22 +5,40 @@ import { IoPlaySharp } from "react-icons/io5";
 import { AudioFileInfo } from "../types";
 import defaultCover from '../assets/default-cover.png';
 import { usePlayer } from "../context/PlayerContext";
+import { Dropdown, MenuProps } from "antd";
+import customPlayListsStore from "../store/customPlayListsStore";
+import { observer } from "mobx-react-lite";
 
 type SongItemProps = {
     index: number;
     file?: AudioFileInfo;
 };
 
-const SongItem = ({ index, file }: SongItemProps) => {
-    const { play, pause, state:{currentTime, volume, duration}, loadTrack, setVolume, seekTo } = usePlayer();
+const SongItem = observer(({ index, file }: SongItemProps) => {
+    const { play, pause, state: { currentTime, volume, duration }, loadTrack, setVolume, seekTo } = usePlayer();
     const isEven = index % 2 === 0;
+
+    const addItems: MenuProps['items'] = [
+    ];
+
+    customPlayListsStore.getAllPlayLists().forEach((playList, id) => {
+        addItems.push({
+            label: (
+                <div onClick={() => {customPlayListsStore.addFileToPlayList(id, file)}}>
+                    {playList.name}
+                </div>
+            ),
+            key: id,
+        });
+    })
+
     const handleDoubleClick = () => {
         loadTrack(file);
         // play();
     };
     return (
         <div className={`group flex flex-row items-center justify-between py-2 hover:bg-gray-200 ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}
-             onDoubleClick={handleDoubleClick}>
+            onDoubleClick={handleDoubleClick}>
             {/* 歌名/歌手 */}
             <div className='flex flex-row items-center justify-start flex-1'>
                 <div className='relative'>
@@ -36,16 +54,18 @@ const SongItem = ({ index, file }: SongItemProps) => {
             </div>
             {/*操作图标*/}
             <div className='w-25 flex flex-row items-center justify-center gap-2 opacity-0 group-hover:opacity-100'>
-                <MdOutlineAddBox className='text-gray-500 cursor-pointer' />
+                <Dropdown menu={{ items:addItems }} trigger={['click']}>
+                    <MdOutlineAddBox className='text-gray-500 cursor-pointer' />
+                </Dropdown>
                 <CiCircleMore className='text-gray-500 cursor-pointer' />
             </div>
             {/* 专辑 */}
             <div className='text-xs font-light flex-1'>{file?.album || '未知专辑'}</div>
-            
+
             <div className='text-xs font-light w-10'>{formatTime(file?.duration)}</div>
             <div className='text-xs font-light w-16'>{formatFileSize(file?.fileSize)}</div>
         </div>
     );
-};
+});
 
 export default SongItem;
