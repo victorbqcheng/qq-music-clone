@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { AudioFileInfo } from "../types";
 
-type CustomPlayList = {
+export type CustomPlayList = {
     name: string;
     files: AudioFileInfo[];
 };
@@ -37,14 +37,18 @@ class CustomPlayListsStore {
             }
         }
     }
-    getPlayList(name: string): AudioFileInfo[] | undefined {
+    getPlayList(name: string): CustomPlayList {
         for (const playList of this.customPlayLists.values()) {
             if (playList.name === name) {
-                return playList.files;
+                return playList;
             }
         }
         return undefined;
     }
+    getPlayListById(id: string): CustomPlayList {
+        return this.customPlayLists.get(id);
+    }
+
     getAllPlayLists(): Map<string, CustomPlayList> {
         return this.customPlayLists
     }
