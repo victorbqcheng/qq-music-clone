@@ -60,6 +60,7 @@ const NoLocalSongs = observer(() => {
 });
 
 const LocalSongsList = observer(() => {
+    const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
     const handleAddFiles = async () => {
         const files = await window.NativeAPI.addFiles();
         // console.log('添加的文件:', files);
@@ -95,7 +96,7 @@ const LocalSongsList = observer(() => {
                     //     <SongItem key={index} index={index} />
                     // ))
                     localAudioStore.localAudioFiles.map((file, index) => (
-                        <SongItem key={index} index={index} file={file} />
+                        <SongItem key={index} index={index} file={file} onClick={()=>setSelectedIndex(index)} selected={index===selectedIndex} />
                     ))
                 }
             </div>
