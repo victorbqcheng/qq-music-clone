@@ -17,17 +17,17 @@ type SongItemProps = {
     file?: AudioFileInfo;
     selected?: boolean;
     onClick?: (index: number) => void;
+    onDelete?: () => void;
 };
 
-const SongItem = observer(({ index, file, selected, onClick }: SongItemProps) => {
+const SongItem = observer(({ index, file, selected, onClick, onDelete }: SongItemProps) => {
     const { play, pause, state: { currentTime, volume, duration }, loadTrack, setVolume, seekTo } = usePlayer();
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
     const isEven = index % 2 === 0;
 
-    const addItems: MenuProps['items'] = [
-    ];
+    const addMenuItems: MenuProps['items'] = [];
     customPlayListsStore.getAllPlayLists().forEach((playList, id) => {
         // 判断歌单中是否已经有了此歌曲
         let isInPlayList = false;
@@ -45,8 +45,17 @@ const SongItem = observer(({ index, file, selected, onClick }: SongItemProps) =>
             disabled: isInPlayList,
             key: id,
         };
-        addItems.unshift(menuItem);
+        addMenuItems.unshift(menuItem);
     })
+
+    const moreMenuItems: MenuProps['items'] = [
+        {
+            label: (
+                <div onClick={()=>{onDelete()}}>删除</div>
+            ),
+            key: '0',
+        }
+    ];
 
     const handleDoubleClick = () => {
         loadTrack(file);
@@ -78,11 +87,14 @@ const SongItem = observer(({ index, file, selected, onClick }: SongItemProps) =>
                 {
                     (selected || isHovered) ?
                     <div className='w-25 flex flex-row items-center justify-center gap-2 opacity-100'>
-                        <Dropdown menu={{ items: addItems }} trigger={['click']}
+                        <Dropdown menu={{ items: addMenuItems }} trigger={['click']}
                             onOpenChange={(open) => setOverlayVisible(open)}>
                             <MdOutlineAddBox className='text-gray-500 cursor-pointer' />
                         </Dropdown>
-                        <CiCircleMore className='text-gray-500 cursor-pointer' />
+                        <Dropdown menu={{ items: moreMenuItems }} trigger={['click']}
+                            onOpenChange={(open) => setOverlayVisible(open)}>
+                            <CiCircleMore className='text-gray-500 cursor-pointer' />
+                        </Dropdown>
                     </div>
                     :
                     (<div className="w-25 h-1"></div>)

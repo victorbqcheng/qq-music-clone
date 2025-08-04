@@ -97,6 +97,15 @@ class CustomPlayListsStore {
             this.savePlayListsToLocalStorage();
         }
     }
+    // 从歌单中删除文件
+    removeFileFromPlayList(id: string, filePath: string): void {
+        const playList = this.customPlayLists.get(id);
+        if (playList) {
+            playList.files = playList.files.filter(file => file.filePath !== filePath);
+            this.customPlayLists.set(id, playList);
+            this.savePlayListsToLocalStorage();
+        }
+    }
 
     private savePlayListsToLocalStorage():void {
         const mapObj = Object.fromEntries(this.customPlayLists);

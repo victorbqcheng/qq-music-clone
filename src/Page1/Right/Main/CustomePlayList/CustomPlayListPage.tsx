@@ -9,6 +9,7 @@ import { RiShareCircleLine } from "react-icons/ri";
 import customPlayListsStore, { CustomPlayList } from '../../../../store/customPlayListsStore';
 import { observer } from 'mobx-react-lite';
 import SongItem from '../../../../components/SongItem';
+import { AudioFileInfo } from '../../../../types';
 
 const CustomPlayListPage = observer(() => {
     const params = useParams();
@@ -22,40 +23,38 @@ const CustomPlayListPage = observer(() => {
         height: '140px'
     };
     const height112: React.CSSProperties = {
-        height: '112px'
+        height: '92px'
+    };
+
+    const handleDeleteFile = (f: AudioFileInfo) => {
+        if (!playList) return;
+        customPlayListsStore.removeFileFromPlayList(id, f.filePath);
     };
 
     return (
         <div className='h-full min-h-full flex flex-col overflow-y-auto custom-scrollbar'
             onScroll={(e) => {
-                setShowStickyHeader(e.currentTarget.scrollTop > 112);
+                setShowStickyHeader(e.currentTarget.scrollTop > 92);
             }}>
 
             {
                 <div className={`flex flex-row shrink-0 w-full bg-gray-100`}
                     style={showStickyHeader ? height112 : height140}>
-                    <img src={defaultCover} className='w-35 h-35' />
+                    <img src={defaultCover} className='w-35 h-35' title='defaultcover' />
                     <div className='flex flex-col justify-between px-4'>
                         <h1 className='text-2xl font-bold'>{playList?.name}</h1>
                         <div className='font-light text-xs'>添加标签</div>
                         <div className='font-light text-xs'>精心完善歌单信息有机会获得推荐，让更多用户看到你的大作</div>
-                        <div className='flex flex-row gap-4'>
-                            <IconButton label='播放' icon={<IoPlaySharp />} />
-                            <IconButton label='下载' icon={<BiSolidCloudDownload />} />
-                            <IconButton label='批量' icon={<PiListChecksLight />} />
-                            <IconButton label='分享' icon={<RiShareCircleLine />} />
-                        </div>
+                        <Interactions />
                     </div>
                 </div>
             }
 
             {
                 showStickyHeader && (
-                    <div className='flex flex-row gap-4 sticky top-0 bg-gray-100'>
-                        <IconButton label='播放' icon={<IoPlaySharp />} />
-                        <IconButton label='下载' icon={<BiSolidCloudDownload />} />
-                        <IconButton label='批量' icon={<PiListChecksLight />} />
-                        <IconButton label='分享' icon={<RiShareCircleLine />} />
+                    <div className='h-12 shrink-0 flex flex-row items-center gap-4 sticky top-0 bg-gray-100 z-1'>
+                        <img src={defaultCover} className='w-10 h-10' title='defaultcover' />
+                        <Interactions />
                     </div>
                 )
             }
@@ -71,13 +70,27 @@ const CustomPlayListPage = observer(() => {
                 {
                     playList?.files.map((file, index) => (
                         <div key={index} className='w-full'>
-                            <SongItem key={index} index={index} file={file} onClick={()=>setSelectedIndex(index)} selected={index===selectedIndex} />
+                            <SongItem key={index} index={index} file={file} selected={index === selectedIndex}
+                                onClick={() => setSelectedIndex(index)}
+                                onDelete={() => handleDeleteFile(file)} />
                         </div>
                     ))
                 }
             </div>
+
         </div>
     )
 });
+
+const Interactions = () => {
+    return (
+        <div className='flex flex-row gap-4'>
+            <IconButton label='播放' icon={<IoPlaySharp />} />
+            <IconButton label='下载' icon={<BiSolidCloudDownload />} />
+            <IconButton label='批量' icon={<PiListChecksLight />} />
+            <IconButton label='分享' icon={<RiShareCircleLine />} />
+        </div>
+    );
+};
 
 export default CustomPlayListPage
