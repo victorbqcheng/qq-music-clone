@@ -14,6 +14,7 @@ const CustomPlayListPage = observer(() => {
     const params = useParams();
     const id = params.id;
     const [showStickyHeader, setShowStickyHeader] = React.useState(false);
+    const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
     const playList = customPlayListsStore.getPlayListById(id)
 
 
@@ -70,7 +71,7 @@ const CustomPlayListPage = observer(() => {
                 {
                     playList?.files.map((file, index) => (
                         <div key={index} className='w-full'>
-                            <SongItem key={index} index={index} file={file} />
+                            <SongItem key={index} index={index} file={file} onClick={()=>setSelectedIndex(index)} selected={index===selectedIndex} />
                         </div>
                     ))
                 }
