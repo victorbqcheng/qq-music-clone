@@ -6,6 +6,7 @@ import { IoPlaySharp, IoPauseSharp } from "react-icons/io5";
 import { RxSpeakerModerate } from "react-icons/rx";
 import { usePlayer } from '../context/PlayerContext';
 import { formatTime } from '../lib/utils';
+import currentPlayListStore from '../store/currentPlayListStore';
 
 const style: React.CSSProperties = {
     display: 'inline-block',
@@ -16,7 +17,7 @@ const style: React.CSSProperties = {
 
 const Controlbar = () => {
 
-    const { play, pause, state: { currentTime, volume, duration, isPlaying }, loadTrack, setVolume, seekTo } = usePlayer();
+    const { play, pause, state: { currentTime, volume, duration, isPlaying, currentTrack }, loadTrack, setVolume, seekTo } = usePlayer();
 
     // volume control content
     const content = (
@@ -53,18 +54,52 @@ const Controlbar = () => {
             play();
         }
     };
+    const handlePlayPre = ()=>{
+        currentPlayListStore.getAudioFiles().findIndex((f, index) => {
+            if (f.filePath === currentTrack?.filePath) {
+                const preIndex = index - 1;
+                if (preIndex >= 0) {
+                    loadTrack(currentPlayListStore.getAudioFiles()[preIndex]);
+                }else{
+                    // 如果没有上一首，则不做任何操作
+                }
+                return true; // 找到当前播放的文件，停止查找
+            }
+            return false; // 继续查找
+        });
+    };
+    const handlePlayNext = () => {
+        currentPlayListStore.getAudioFiles().findIndex((f, index) => {
+            if (f.filePath === currentTrack?.filePath) {
+                const nextIndex = index + 1;
+                if (nextIndex < currentPlayListStore.getAudioFiles().length) {
+                    loadTrack(currentPlayListStore.getAudioFiles()[nextIndex]);
+                }else{
+                    // 如果没有下一首，则不做任何操作
+                }
+                return true; // 找到当前播放的文件，停止查找
+            }
+            return false; // 继续查找
+        });
+    };
     return (
         <div className='flex flex-col items-center justify-center w-1/3 pointer-events-none'>
             <div className='flex flex-row items-center justify-around w-full'>
                 <div className='cursor-pointer hover:text-green-400 pointer-events-auto'><TfiLoop /></div>
-                <div className='cursor-pointer hover:text-green-400 pointer-events-auto'><AiOutlineStepBackward /> </div>
+                <div className='cursor-pointer hover:text-green-400 pointer-events-auto'
+                     onClick={handlePlayPre}>
+                    <AiOutlineStepBackward />
+                </div>
                 <div className='cursor-pointer bg-green-400 p-2 rounded-2xl w-10 flex flex-row items-center justify-center pointer-events-auto'
                      onClick={togglePlayPause}>
                     {
                         isPlaying? <IoPauseSharp />:<IoPlaySharp /> 
                     }
                 </div>
-                <div className='cursor-pointer hover:text-green-400 pointer-events-auto'><AiOutlineStepForward /></div>
+                <div className='cursor-pointer hover:text-green-400 pointer-events-auto'
+                     onClick={handlePlayNext}>
+                    <AiOutlineStepForward />
+                </div>
                 <div className='cursor-pointer hover:text-green-400 pointer-events-auto'>
                     <Popover content={content} placement="top" title={null} trigger="click">
                         <RxSpeakerModerate />

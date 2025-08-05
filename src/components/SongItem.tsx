@@ -4,7 +4,6 @@ import { formatFileSize, formatTime } from "../lib/utils";
 import { IoPlaySharp } from "react-icons/io5";
 import { AudioFileInfo } from "../types";
 import defaultCover from '../assets/default-cover.png';
-import { usePlayer } from "../context/PlayerContext";
 import { Dropdown, MenuProps } from "antd";
 import customPlayListsStore, { isPredefinedList } from "../store/customPlayListsStore";
 import { observer } from "mobx-react-lite";
@@ -75,7 +74,7 @@ const SongItem = observer(({ index, file, selected, onClick, onDelete, onPlay }:
                 <div className='flex flex-row items-center justify-start flex-1'>
                     <div className='relative h-10'>
                         <img src={file.img || defaultCover} alt="Song Cover" className='w-10 h-10 mr-2' />
-                        <div className='absolute top-0 left-0 h-full w-full flex justify-center items-center opacity-0 group-hover:opacity-100 text-white hover:text-green-400'
+                        <div className='absolute top-0 left-0 h-full w-full flex justify-center items-center cursor-pointer opacity-0 group-hover:opacity-100 text-white hover:text-green-400'
                              onClick={handleDoubleClick}>
                             <IoPlaySharp className='text-xl' />
                         </div>
