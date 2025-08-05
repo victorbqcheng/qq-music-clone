@@ -32,8 +32,9 @@ npm start
 ## Project Structure
 
 ```
-/src        # Source code
-/main.ts    # Electron main process
+/src                # Source code
+/src/main.ts        # Electron main process
+/src/renderer.tsx    # Renderer process
 ```
 
 ## TODO:
