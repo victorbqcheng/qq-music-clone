@@ -18,10 +18,11 @@ type SongItemProps = {
     selected?: boolean;
     onClick?: (index: number) => void;
     onDelete?: () => void;
+    onPlay?: () => void;
 };
 
-const SongItem = observer(({ index, file, selected, onClick, onDelete }: SongItemProps) => {
-    const { play, pause, state: { currentTime, volume, duration }, loadTrack, setVolume, seekTo } = usePlayer();
+const SongItem = observer(({ index, file, selected, onClick, onDelete, onPlay }: SongItemProps) => {
+    // const { play, pause, state: { currentTime, volume, duration, isPlaying }, loadTrack, setVolume, seekTo } = usePlayer();
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -58,8 +59,8 @@ const SongItem = observer(({ index, file, selected, onClick, onDelete }: SongIte
     ];
 
     const handleDoubleClick = () => {
-        loadTrack(file);
-        // play();
+        // loadTrack(file);
+        onPlay && onPlay();
     };
     return (
         <>
@@ -71,11 +72,14 @@ const SongItem = observer(({ index, file, selected, onClick, onDelete }: SongIte
                 onMouseLeave={() => setIsHovered(false)}>
                 {/* 歌名/歌手 */}
                 <div className='flex flex-row items-center justify-start flex-1'>
-                    <div className='relative'>
+                    <div className='relative h-10'>
                         <img src={file.img || defaultCover} alt="Song Cover" className='w-10 h-10 mr-2' />
-                        <div className='absolute top-0 left-0 h-full w-full flex justify-center items-center opacity-0 group-hover:opacity-100 text-white hover:text-green-400'>
+                        <div className='absolute top-0 left-0 h-full w-full flex justify-center items-center opacity-0 group-hover:opacity-100 text-white hover:text-green-400'
+                             onClick={handleDoubleClick}>
                             <IoPlaySharp className='text-xl' />
                         </div>
+                        {/* TODO: pause button */}
+                        
                     </div>
                     <div className=''>
                         <div className='text-sm font-light'>{file?.title || '未知歌曲'}: {index}</div>

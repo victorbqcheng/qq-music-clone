@@ -10,6 +10,7 @@ import { IoPlaySharp } from 'react-icons/io5';
 import localAudioStore from '../store/localAudioStore';
 import { usePlayer } from '../context/PlayerContext';
 import { Dropdown, MenuProps } from 'antd';
+import currentPlayListStore from '../store/currentPlayListStore';
 
 // https://claude.ai/chat/e253ec18-4a6e-48a8-acc6-f9ca0d649fa6
 
@@ -49,11 +50,11 @@ const CurrentPlayList = observer(() => {
                     <RiDeleteBin6Line className='text-2xl' />
                 </div>
             </div>
-            <div className='text-xs font-light h-10'>共{noOfTracks}首歌曲</div>
+            <div className='text-xs font-light h-10'>共{currentPlayListStore.getAudioFiles().length}首歌曲</div>
 
             <div className='overflow-y-auto custom-scrollbar w-full'>
                 {
-                    localAudioStore.localAudioFiles.map((file, index) => (
+                    currentPlayListStore.getAudioFiles().map((file, index) => (
                         <ListItem key={index} index={index} file={file} selected={index === selectedIndex} onClick={() => setSelectedIndex(index)} />
                     ))
                 }

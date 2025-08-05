@@ -6,6 +6,9 @@ import MusicCD from '../../../../assets/music-cd.webp'
 import { observer } from 'mobx-react-lite';
 import localAudioStore from '../../../../store/localAudioStore';
 import SongItem from '../../../../components/SongItem';
+import { usePlayer } from '../../../../context/PlayerContext';
+import { AudioFileInfo } from '../../../../types';
+import currentPlayListStore from '../../../../store/currentPlayListStore';
 
 const LocalTab = observer(() => {
     return (
@@ -61,6 +64,7 @@ const NoLocalSongs = observer(() => {
 
 const LocalSongsList = observer(() => {
     const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
+    const {play, pause, state: { currentTime, volume, duration, isPlaying }, loadTrack, setVolume, seekTo} = usePlayer();
     const handleAddFiles = async () => {
         const files = await window.NativeAPI.addFiles();
         // console.log('添加的文件:', files);
@@ -72,6 +76,12 @@ const LocalSongsList = observer(() => {
     const handleClearFiles = ()=>{
         localAudioStore.clearLocalAudioFiles();
     };
+
+    const handlePlay = (file: AudioFileInfo) => {
+        loadTrack(file);
+        currentPlayListStore.setPlayListID(localAudioStore.localPlayListID);
+        currentPlayListStore.setAudioFiles(localAudioStore.getLocalAudioFiles());
+    }
 
     return (
         <>
@@ -96,7 +106,10 @@ const LocalSongsList = observer(() => {
                     //     <SongItem key={index} index={index} />
                     // ))
                     localAudioStore.localAudioFiles.map((file, index) => (
-                        <SongItem key={index} index={index} file={file} onClick={()=>setSelectedIndex(index)} selected={index===selectedIndex} />
+                        <SongItem key={index} index={index} file={file} selected={index===selectedIndex}
+                                  onClick={()=>setSelectedIndex(index)}
+                                  onDelete={()=>{/*TODO:*/}}
+                                  onPlay={()=>handlePlay(file)} />
                     ))
                 }
             </div>

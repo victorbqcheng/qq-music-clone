@@ -10,12 +10,16 @@ import customPlayListsStore, { CustomPlayList } from '../../../../store/customPl
 import { observer } from 'mobx-react-lite';
 import SongItem from '../../../../components/SongItem';
 import { AudioFileInfo } from '../../../../types';
+import { usePlayer } from '../../../../context/PlayerContext';
+import currentPlayListStore from '../../../../store/currentPlayListStore';
 
 const CustomPlayListPage = observer(() => {
     const params = useParams();
     const id = params.id;
     const [showStickyHeader, setShowStickyHeader] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
+    const {play, pause, state: { currentTime, volume, duration, isPlaying }, loadTrack} = usePlayer();
+
     const playList = customPlayListsStore.getPlayListById(id)
 
 
@@ -29,6 +33,11 @@ const CustomPlayListPage = observer(() => {
     const handleDeleteFile = (f: AudioFileInfo) => {
         if (!playList) return;
         customPlayListsStore.removeFileFromPlayList(id, f.filePath);
+    };
+    const handlePlay = (file:AudioFileInfo)=>{
+        loadTrack(file);
+        currentPlayListStore.setPlayListID(id);
+        currentPlayListStore.setAudioFiles(playList?.files || []);
     };
 
     return (
@@ -72,7 +81,8 @@ const CustomPlayListPage = observer(() => {
                         <div key={index} className='w-full'>
                             <SongItem key={index} index={index} file={file} selected={index === selectedIndex}
                                 onClick={() => setSelectedIndex(index)}
-                                onDelete={() => handleDeleteFile(file)} />
+                                onDelete={() => handleDeleteFile(file)}
+                                onPlay={()=>handlePlay(file)} />
                         </div>
                     ))
                 }
