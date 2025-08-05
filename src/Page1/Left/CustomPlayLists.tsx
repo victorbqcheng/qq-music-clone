@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { message } from 'antd';
 import { BsFileMusic } from "react-icons/bs";
 import { MdOutlineCollections } from "react-icons/md";
-import customPlayListsStore from '../../store/customPlayListsStore';
+import customPlayListsStore, { isPredefinedList } from '../../store/customPlayListsStore';
 import PlayListItem from '../../components/PlayListItem';
 import { observer } from 'mobx-react-lite';
 import { useParams } from 'react-router';
@@ -52,7 +52,7 @@ const CustomPlayLists = observer(() => {
             
             {
                 Array.from(customPlayListsStore.getAllPlayLists().entries()).reverse().map(([playListId, playList]) => (
-                    <PlayListItem key={playListId} playListId={playListId} link={`/custome-playlist/${playListId}`} name={playList.name} selected={selected(playListId)} icon={<BsFileMusic className='w-6 h-6' />} />
+                    !isPredefinedList(playListId) && <PlayListItem key={playListId} playListId={playListId} link={`/custome-playlist/${playListId}`} name={playList.name} selected={selected(playListId)} icon={<BsFileMusic className='w-6 h-6' />} />
                 ))
 
             }

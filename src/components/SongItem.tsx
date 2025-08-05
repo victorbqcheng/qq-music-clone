@@ -6,7 +6,7 @@ import { AudioFileInfo } from "../types";
 import defaultCover from '../assets/default-cover.png';
 import { usePlayer } from "../context/PlayerContext";
 import { Dropdown, MenuProps } from "antd";
-import customPlayListsStore from "../store/customPlayListsStore";
+import customPlayListsStore, { isPredefinedList } from "../store/customPlayListsStore";
 import { observer } from "mobx-react-lite";
 import { ItemType } from "antd/es/menu/interface";
 import { useState } from "react";
@@ -30,6 +30,7 @@ const SongItem = observer(({ index, file, selected, onClick, onDelete, onPlay }:
 
     const addMenuItems: MenuProps['items'] = [];
     customPlayListsStore.getAllPlayLists().forEach((playList, id) => {
+        if(isPredefinedList(id)) return; // 跳过预定义的歌单
         // 判断歌单中是否已经有了此歌曲
         let isInPlayList = false;
         if (playList.files.some(f => f.filePath === file.filePath)) {

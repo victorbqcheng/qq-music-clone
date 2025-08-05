@@ -18,7 +18,7 @@ const CustomPlayListPage = observer(() => {
     const id = params.id;
     const [showStickyHeader, setShowStickyHeader] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
-    const {play, pause, state: { currentTime, volume, duration, isPlaying }, loadTrack} = usePlayer();
+    const {play, pause, state: { currentTime, volume, duration, isPlaying, currentTrack }, loadTrack} = usePlayer();
 
     const playList = customPlayListsStore.getPlayListById(id)
 
@@ -33,6 +33,13 @@ const CustomPlayListPage = observer(() => {
     const handleDeleteFile = (f: AudioFileInfo) => {
         if (!playList) return;
         customPlayListsStore.removeFileFromPlayList(id, f.filePath);
+        if(currentPlayListStore.currentPlayListID === id) {
+            currentPlayListStore.removeAudioFile(f.filePath);
+            // 如果删除的文件是当前播放的文件，则播放下一首
+            if (currentTrack?.filePath === f.filePath) {
+                // TODO:
+            }
+        }
     };
     const handlePlay = (file:AudioFileInfo)=>{
         loadTrack(file);

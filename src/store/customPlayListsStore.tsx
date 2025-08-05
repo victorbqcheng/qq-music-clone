@@ -7,28 +7,34 @@ export type CustomPlayList = {
 };
 
 class CustomPlayListsStore {
-    
-    favoritePlayListID:string = '';
-    recentlyPlayListID:string = '';
-    trialPlayListID:string = '';
+
+    favoritePlayListID: string = '';
+    recentlyPlayListID: string = '';
+    trialPlayListID: string = '';
     // id作为键
     customPlayLists: Map<string, CustomPlayList> = new Map();
     constructor() {
         makeAutoObservable(this);
         this.loadPlayListsFromLocalStorage();
+        this.favoritePlayListID = localStorage.getItem('favoritePlayListID') || '';
+        this.recentlyPlayListID = localStorage.getItem('recentlyPlayListID') || '';
+        this.trialPlayListID = localStorage.getItem('trialPlayListID') || '';
         // 如果没有预定义的歌单ID，则设置
-        if(!this.getPlayListById(this.favoritePlayListID)){
+        if (!this.getPlayListById(this.favoritePlayListID)) {
             this.favoritePlayListID = this.addPlayList('喜欢', []);
         }
-        if(!this.getPlayListById(this.recentlyPlayListID)){
+        if (!this.getPlayListById(this.recentlyPlayListID)) {
             this.recentlyPlayListID = this.addPlayList('最近播放', []);
         }
-        if(!this.getPlayListById(this.trialPlayListID)){
+        if (!this.getPlayListById(this.trialPlayListID)) {
             this.trialPlayListID = this.addPlayList('试听列表', []);
         }
         this.savePlayListsToLocalStorage();
+        localStorage.setItem('favoritePlayListID', this.favoritePlayListID);
+        localStorage.setItem('recentlyPlayListID', this.recentlyPlayListID);
+        localStorage.setItem('trialPlayListID', this.trialPlayListID);
     }
-    addPlayList(name: string, files: AudioFileInfo[]):string|null {
+    addPlayList(name: string, files: AudioFileInfo[]): string | null {
         // 检查名称是否已存在
         if (this.isPlayListNameExists(name)) {
             return null; // 名称已存在，返回null
@@ -40,7 +46,7 @@ class CustomPlayListsStore {
         this.savePlayListsToLocalStorage();
         return id; // 返回新添加的歌单ID
     }
-    removePlayList(name: string):void {
+    removePlayList(name: string): void {
         // 查找对应的歌单ID
         for (const [id, playList] of this.customPlayLists.entries()) {
             if (playList.name === name) {
@@ -65,7 +71,7 @@ class CustomPlayListsStore {
     getAllPlayLists(): Map<string, CustomPlayList> {
         return this.customPlayLists
     }
-    renamePlayList(id: string, oldName: string, newName: string):boolean {
+    renamePlayList(id: string, oldName: string, newName: string): boolean {
         // 检查新名称是否已存在
         for (const [_id, _playList] of this.customPlayLists.entries()) {
             if (_playList.name === newName && _id !== id) {
@@ -121,21 +127,25 @@ class CustomPlayListsStore {
         }
     }
 
-    private savePlayListsToLocalStorage():void {
+    private savePlayListsToLocalStorage(): void {
         const mapObj = Object.fromEntries(this.customPlayLists);
         localStorage.setItem('customPlayLists', JSON.stringify(mapObj));
     }
-    private loadPlayListsFromLocalStorage():void {
+    private loadPlayListsFromLocalStorage(): void {
         const customPlayLists = localStorage.getItem('customPlayLists');
         if (customPlayLists) {
             const parsedPlayLists = JSON.parse(customPlayLists) as Map<string, CustomPlayList>;
             this.customPlayLists = new Map(Object.entries(parsedPlayLists));
         }
     }
-    
-};
 
+};
 
 const customPlayListsStore = new CustomPlayListsStore();
 export default customPlayListsStore;
 
+export const isPredefinedList = (playListId: string) => {
+    return playListId === customPlayListsStore.favoritePlayListID
+        || playListId === customPlayListsStore.recentlyPlayListID
+        || playListId === customPlayListsStore.trialPlayListID;
+}
