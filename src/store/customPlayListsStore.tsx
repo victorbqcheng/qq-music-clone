@@ -7,12 +7,26 @@ export type CustomPlayList = {
 };
 
 class CustomPlayListsStore {
+    
+    favoritePlayListID:string = '';
+    recentlyPlayListID:string = '';
+    trialPlayListID:string = '';
     // id作为键
     customPlayLists: Map<string, CustomPlayList> = new Map();
-
     constructor() {
         makeAutoObservable(this);
         this.loadPlayListsFromLocalStorage();
+        // 如果没有预定义的歌单ID，则设置
+        if(!this.getPlayListById(this.favoritePlayListID)){
+            this.favoritePlayListID = this.addPlayList('喜欢', []);
+        }
+        if(!this.getPlayListById(this.recentlyPlayListID)){
+            this.recentlyPlayListID = this.addPlayList('最近播放', []);
+        }
+        if(!this.getPlayListById(this.trialPlayListID)){
+            this.trialPlayListID = this.addPlayList('试听列表', []);
+        }
+        this.savePlayListsToLocalStorage();
     }
     addPlayList(name: string, files: AudioFileInfo[]):string|null {
         // 检查名称是否已存在

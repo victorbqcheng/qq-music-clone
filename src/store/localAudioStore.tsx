@@ -4,10 +4,17 @@ import { makeAutoObservable } from "mobx";
 import { AudioFileInfo } from 'src/types';
 
 class LocalAudioStore{
-    
+    localPlayListID:string = '';
     localAudioFiles: AudioFileInfo[] = [];
     constructor() {
         makeAutoObservable(this);
+        
+        this.localPlayListID = localStorage.getItem('localPlayListID')
+        if(!this.localPlayListID) {
+            this.localPlayListID = Date.now().toString(36) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('localPlayListID', this.localPlayListID);
+        }
+        
         const storedFiles = localStorage.getItem('localAudioFiles');
         if (storedFiles) {
             this.localAudioFiles = JSON.parse(storedFiles) as AudioFileInfo[];
