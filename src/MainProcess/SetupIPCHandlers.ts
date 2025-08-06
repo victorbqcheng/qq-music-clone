@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import { AudioFileInfo } from "../types";
 import {parseFile} from "music-metadata";
 import path from 'node:path';
@@ -37,6 +37,11 @@ const getAudioFileInfo = async (filePath: string): Promise<AudioFileInfo> => {
 
 
 const SetupIPCHandlers = () => {
+
+    ipcMain.on('quit', ()=>{
+        app.quit();
+    });
+
     ipcMain.on('minimize-window', () => {
         const focusedWindow = BrowserWindow.getFocusedWindow();
         if (focusedWindow) {

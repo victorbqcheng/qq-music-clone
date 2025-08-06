@@ -5,6 +5,7 @@ import {contextBridge, ipcRenderer} from 'electron';
 
 contextBridge.exposeInMainWorld('NativeAPI', {
     ping: ()=>ipcRenderer.invoke('ping'),
+    quit: () => ipcRenderer.send('quit'),
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     maximizeWindow: () => ipcRenderer.send('maximize-window'),
     closeWindow: () => ipcRenderer.send('close-window'),

@@ -39,6 +39,7 @@ import Trial from './Page1/Right/Main/Trial/Trial';
 import CustomPlayListPage from './Page1/Right/Main/CustomePlayList/CustomPlayListPage';
 import { PlayerContextProvider } from './context/PlayerContext';
 import '@ant-design/v5-patch-for-react-19';
+import Tray from './tray/tray';
 
 
 // const root = createRoot(document.body);
@@ -62,6 +63,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="*" element={<div>404 Not Found</div>} />
 
           </Route>
+          <Route path="/tray" element={<Tray />} />
         </Routes>
       </HashRouter>
     </PlayerContextProvider>

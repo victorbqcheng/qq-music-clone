@@ -67,8 +67,8 @@ const createTrayMenuWindow = () => {
     } else {
       // 如果窗口存在但隐藏，重新显示并更新位置
       const mousePos = screen.getCursorScreenPoint();
-      const windowWidth = 400;
-      const windowHeight = 300;
+      const windowWidth = 200;
+      const windowHeight = 370;
       const windowX = mousePos.x;
       const windowY = mousePos.y - windowHeight;
 
@@ -90,8 +90,8 @@ const createTrayMenuWindow = () => {
   const mousePos = screen.getCursorScreenPoint();
 
   // 窗口尺寸
-  const windowWidth = 400;
-  const windowHeight = 300;
+  const windowWidth = 200;
+  const windowHeight = 370;
 
   // 计算窗口位置，使窗口的左下角与鼠标位置对齐
   const windowX = mousePos.x;
@@ -112,23 +112,23 @@ const createTrayMenuWindow = () => {
     x: adjustedX,
     y: adjustedY,
     webPreferences: {
-      webSecurity: false,
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
     icon: null,
     parent: mainWindow,
     modal: false,
     show: false,
-    resizable: true, // 禁止调整大小，保持固定尺寸
-    frame: true,
+    resizable: false, // 禁止调整大小，保持固定尺寸
+    frame: false,
     alwaysOnTop: true // 保持在最前面
   });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    trayWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL + '/tray-menu.html');
+    trayWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL + '/#/tray');
   } else {
-    trayWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/tray-menu.html`));
+    trayWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html/#/tray`));
   }
 
   trayWindow.once('ready-to-show', () => {

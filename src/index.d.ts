@@ -6,6 +6,7 @@ declare global {
     interface Window {
         NativeAPI: {
             ping?: () => Promise<string>;
+            quit?: () => void;
             minimizeWindow?: () => void;
             maximizeWindow?: () => void;
             closeWindow?: () => void;
