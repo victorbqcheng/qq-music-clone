@@ -13,8 +13,9 @@ declare global {
             fullscreenWindow?: () => void;
             addFiles?: () => Promise<AudioFileInfo[]>;
 
-            onMaximized?: (callback: () => void) => void;
-            onUnmaximized?: (callback: () => void) => void;
+            onMaximized?: (callback: () => void) => ()=>void;
+            onUnmaximized?: (callback: () => void) => ()=>void;
+            onTrayShow?: (callback: () => void) => ()=>void;
         };
     }
 }
