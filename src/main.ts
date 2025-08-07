@@ -57,7 +57,7 @@ const createWindow = () => {
     mainWindow.webContents.send('window-unfullscreen');
   });
   mainWindow.hookWindowMessage(0x0117, function (e) {
-    // 278是WM_INITMENUPOPUP消息
+    // 0x0117是WM_INITMENUPOPUP消息
     mainWindow.setEnabled(false)
     setTimeout(() => mainWindow.setEnabled(true), 10)
     return true
@@ -85,6 +85,7 @@ const createTrayMenuWindow = () => {
       let adjustedX = Math.max(screenX, Math.min(windowX, screenX + screenWidth - windowWidth));
       let adjustedY = Math.max(screenY, Math.min(windowY, screenY + screenHeight - windowHeight));
 
+      trayWindow.setSize(windowWidth, windowHeight);
       trayWindow.setPosition(adjustedX, adjustedY);
       trayWindow.webContents.send('tray-show');
       setTimeout(() => {
@@ -166,6 +167,7 @@ const createTray = () => {
   tray.on('right-click', () => {
     createTrayMenuWindow();
   });
+
 };
 
 // This method will be called when Electron has finished
