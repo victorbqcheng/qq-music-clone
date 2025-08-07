@@ -39,12 +39,16 @@ const Header = observer(() => {
         window.NativeAPI?.closeWindow();
     }
     useEffect(()=>{
-        window.NativeAPI?.onMaximized(() => {
+        const unsubscribeMaximized = window.NativeAPI?.onMaximized(() => {
             setIsWindowMaximized(true);
         });
-        window.NativeAPI?.onUnmaximized(() => {
+        const unsubscribeUnMaximized = window.NativeAPI?.onUnmaximized(() => {
             setIsWindowMaximized(false);
         });
+        return () => {
+            unsubscribeMaximized?.();
+            unsubscribeUnMaximized?.();
+        }
     }, []);
 
     return (

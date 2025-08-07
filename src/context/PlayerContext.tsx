@@ -1,13 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
-import { AudioFileInfo } from '../types';
+import { AudioFileInfo, PlayerState } from '../types';
 
-type PlayerState = {
-    currentTrack: AudioFileInfo | null;
-    isPlaying: boolean;
-    volume: number;
-    duration: number;
-    currentTime: number;
-};
+
 
 type PlayerContextType = {
     state: PlayerState;
@@ -64,7 +58,7 @@ export const PlayerContextProvider: React.FC<{ children: React.ReactNode }> = ({
             setState(prevState => ({ ...prevState, currentTime: time }));
         }
     };
-    
+
     useEffect(()=>{
         const audio = audioRef.current;
         if (!audio) return;

@@ -10,3 +10,11 @@ export declare interface AudioFileInfo {
     fileSize: number;
 };
 
+export type PlayerState = {
+    currentTrack: AudioFileInfo | null;
+    isPlaying: boolean;
+    volume: number;
+    duration: number;
+    currentTime: number;
+};
+

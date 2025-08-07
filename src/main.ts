@@ -56,6 +56,12 @@ const createWindow = () => {
   mainWindow.on('leave-full-screen', () => {
     mainWindow.webContents.send('window-unfullscreen');
   });
+  mainWindow.hookWindowMessage(0x0117, function (e) {
+    // 278是WM_INITMENUPOPUP消息
+    mainWindow.setEnabled(false)
+    setTimeout(() => mainWindow.setEnabled(true), 10)
+    return true
+  })
 };
 
 const createTrayMenuWindow = () => {
@@ -80,8 +86,11 @@ const createTrayMenuWindow = () => {
       let adjustedY = Math.max(screenY, Math.min(windowY, screenY + screenHeight - windowHeight));
 
       trayWindow.setPosition(adjustedX, adjustedY);
-      trayWindow.show();
-      trayWindow.focus();
+      trayWindow.webContents.send('tray-show');
+      setTimeout(() => {
+        trayWindow.show();
+        trayWindow.focus();
+      }, 100);
       return;
     }
   }
