@@ -68,7 +68,7 @@ const CustomPlayListPage = observer(() => {
 
             {
                 showStickyHeader && (
-                    <div className='h-12 shrink-0 flex flex-row items-center gap-4 sticky top-0 bg-gray-100 z-1'>
+                    <div className='h-12 shrink-0 flex flex-row items-center gap-4 sticky top-0 bg-background z-1'>
                         <img src={defaultCover} className='w-10 h-10' title='defaultcover' />
                         <Interactions />
                     </div>
