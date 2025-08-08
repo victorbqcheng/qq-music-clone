@@ -1,14 +1,13 @@
 import React from 'react'
 
 import { Button } from 'antd';
-import { MdOutlineAddBox } from "react-icons/md";
 import MusicCD from '../../../../assets/music-cd.webp'
 
 const SongsTab = () => {
     return (
-        <div className='flex-1 bg-blue-200 flex flex-col '>
+        <div className='flex-1 flex flex-col '>
             {/* 没有喜欢的歌曲时的提示 */}
-            <div className='flex-1 flex flex-col items-center justify-center h-full bg-orange-200'>
+            <div className='flex-1 flex flex-col items-center justify-center h-full'>
                 <img src={MusicCD} alt="Music CD" className='w-32 h-32' />
                 没有收藏的歌曲
                 <Button >去音乐馆逛逛</Button>

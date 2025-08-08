@@ -73,7 +73,7 @@ type ListItemProps = {
 const ListItem1 = ({ index, file }: ListItemProps) => {
     const isEven = index % 2 === 0;
     return (
-        <div className={`group flex flex-row w-full items-center justify-between py-2 hover:bg-gray-200 ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}>
+        <div className={`group flex flex-row w-full items-center justify-between py-2 hover:bg-background-hover ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}>
             <div className='bg-red-400 w-100 py-2 flex whitespace-nowrap overflow-hidden text-ellipsis '>     {/*whitespace-nowrap overflow-hidden text-ellipsis或者group-hover:w-[calc(100%-320px)]*/}
                 <div className='w-10 min-w-10 h-10 mr-2'>img</div>
                 <div className='flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'>left1left2left3left4leftleft1left2left3left4leftleft1left2left3left4left</div>
@@ -101,7 +101,7 @@ const ListItem = ({ index, file, selected, onClick }: ListItemProps) => {
         // play();
     };
     return (
-        <div className={`group flex flex-row items-center justify-between py-2 hover:bg-gray-200 ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}
+        <div className={`group flex flex-row items-center justify-between py-2 hover:bg-background-hover ${isEven ? 'bg-gray-200' : 'bg-gray-100'}`}
             ref={containerRef}
             onDoubleClick={handleDoubleClick}
             onClick={() => onClick && onClick(index)}

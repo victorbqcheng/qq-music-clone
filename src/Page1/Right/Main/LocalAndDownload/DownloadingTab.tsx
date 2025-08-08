@@ -6,7 +6,7 @@ import MusicCD from '../../../../assets/music-cd.webp'
 
 const DownloadingTab = () => {
     return (
-        <div className='flex-1 bg-blue-200 flex flex-col DownloadingTab'>
+        <div className='flex-1 flex flex-col DownloadingTab'>
             {/* 没有下载的视频时的提示 */}
             <div className='flex-1 flex flex-col items-center justify-center h-full'>
                 <img src={MusicCD} alt="Music CD" className='w-32 h-32' />

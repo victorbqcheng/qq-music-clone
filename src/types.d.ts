@@ -8,7 +8,7 @@ export declare interface AudioFileInfo {
     filePath: string;
     img: string | null;
     fileSize: number;
-};
+}
 
 export type PlayerState = {
     currentTrack: AudioFileInfo | null;
@@ -16,5 +16,5 @@ export type PlayerState = {
     volume: number;
     duration: number;
     currentTime: number;
-};
+}
 

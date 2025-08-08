@@ -56,3 +56,11 @@ html::-webkit-scrollbar {
     transform: rotate(360deg);
   }
 }
+
+@theme {
+  --color-background: var(--color-background);
+  --color-background-hover: var(--color-background-hover);
+  --color-text: var(--color-text);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+}

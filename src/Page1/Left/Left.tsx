@@ -8,10 +8,11 @@ import CustomPlayLists from './CustomPlayLists'
 import { CiCircleChevLeft } from "react-icons/ci";
 import { IoSettingsOutline, IoShirtOutline } from "react-icons/io5";
 import { PiGameControllerThin } from "react-icons/pi";
+import { Link } from 'react-router'
 
 const Left = () => {
     return (
-        <div className='my-left w-[250px] min-w-[250px] bg-white shadow-md p-4 flex flex-col justify-start gap-2'>
+        <div className='my-left w-[250px] min-w-[250px] shadow-md p-4 flex flex-col justify-start gap-2'>
             <UserInfo />
             <VipAd />
             {/* spacer */}
@@ -30,7 +31,7 @@ const Left = () => {
             <div className='mt-auto flex flex-row flex-start gap-4'>
                 <div><CiCircleChevLeft className='w-6 h-6 hover:text-green-500' /></div>
                 <div><IoSettingsOutline className='w-6 h-6 hover:text-green-500' /> </div>
-                <div><IoShirtOutline className='w-6 h-6 hover:text-green-500' /> </div>
+                <Link to='/theme'><IoShirtOutline className='w-6 h-6 hover:text-green-500' /> </Link>
                 <div><PiGameControllerThin className='w-6 h-6 hover:text-green-500' /> </div>
 
             </div>

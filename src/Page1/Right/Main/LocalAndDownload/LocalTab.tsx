@@ -12,7 +12,7 @@ import currentPlayListStore from '../../../../store/currentPlayListStore';
 
 const LocalTab = observer(() => {
     return (
-        <div className='flex-1 bg-blue-200 flex flex-col localtab'>
+        <div className='flex-1 flex flex-col localtab'>
             {
                 localAudioStore.getLocalAudioFileCount() > 0 ? (
                     <LocalSongsList />
@@ -52,7 +52,7 @@ const NoLocalSongs = observer(() => {
         },
     ];
     return (
-        <div className='flex-1 flex flex-col items-center justify-center h-full bg-orange-200'>
+        <div className='flex-1 flex flex-col items-center justify-center h-full'>
             <img src={MusicCD} alt="Music CD" className='w-32 h-32' />
             没有本地歌曲
             <Dropdown menu={{ items }} trigger={['click']}>
@@ -85,7 +85,7 @@ const LocalSongsList = observer(() => {
 
     return (
         <>
-            <div className='sticky top-10 bg-gray-100 z-50'>
+            <div className='sticky top-10 bg-background z-50'>
                 <div className='mb-4 flex flex-row gap-2'>
                     <span>播放</span>
                     <span className='cursor-pointer' onClick={handleAddFiles}>添加</span>

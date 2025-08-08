@@ -2,10 +2,12 @@ import { observer } from "mobx-react-lite"
 import Page1 from "./Page1/Page1"
 import Page2 from "./Page2/Page2"
 import stateStore from "./store/stateStore"
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePlayer } from "./context/PlayerContext";
 import { Slider } from "antd";
 import CurrentPlayList from "./CurrentPlayList/CurrentPlayList";
+import changeTheme from "./themes/themes";
+
 
 const App2 = observer(() => {
     const { play, pause, state:{currentTime, volume, duration}, loadTrack, setVolume, seekTo } = usePlayer();
@@ -59,6 +61,9 @@ const App2 = observer(() => {
 });
 
 const App = observer(() => {
+    useEffect(()=>{
+        changeTheme('Default');
+    }, []);
     return (
         <div className="overflow-hidden relative">
             <Page1 />

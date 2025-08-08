@@ -32,7 +32,7 @@ const Header = ({ onFullscreen }: HeaderProps) => {
     }, []);
 
     return (
-        <div className={`absolute top-0 h-18 w-full flex items-center justify-between ${stateStore.showPage2 ? 'my-drag' : ''} bg-gray-200 border-b border-gray-400`}>
+        <div className={`absolute top-0 h-18 w-full flex items-center justify-between ${stateStore.showPage2 ? 'my-drag' : ''} bg-background border-b border-gray-400`}>
             <IoChevronDown className='text-lg hover:text-green-300 my-no-drag' onClick={() => stateStore.setShowPage2(false)} />
             <div className='flex items-center gap-2 pr-2'>
                 <LuFullscreen className='text-lg hover:text-green-300 my-no-drag' onClick={onFullscreen} />

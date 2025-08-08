@@ -54,7 +54,7 @@ const CustomPlayListPage = observer(() => {
             }}>
 
             {
-                <div className={`flex flex-row shrink-0 w-full bg-gray-100`}
+                <div className={`flex flex-row shrink-0 w-full`}
                     style={showStickyHeader ? height112 : height140}>
                     <img src={defaultCover} className='w-35 h-35' title='defaultcover' />
                     <div className='flex flex-col justify-between px-4'>

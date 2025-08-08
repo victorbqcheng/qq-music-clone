@@ -30,7 +30,7 @@ type FunctionItemProps = {
 
 const FunctionItem = ({ icon, selected }: FunctionItemProps) => {
     return (
-        <div className={`h-12 flex flex-col items-center justify-center p-2 ${selected ? 'bg-gray-300' : 'bg-gray-100'} rounded-lg hover:bg-gray-200 cursor-pointer`}>
+        <div className={`h-12 flex flex-col items-center justify-center p-2 ${selected ? 'bg-background-hover' : ''} rounded-lg hover:bg-background-hover cursor-pointer`}>
             {icon}
         </div>
     );

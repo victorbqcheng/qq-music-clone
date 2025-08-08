@@ -22,7 +22,7 @@ const EveryoneListening = () => {
             </h2>
 
 
-            <div className='flex flex-row bg-blue-200 items-center'>
+            <div className='flex flex-row items-center'>
                 <div className='bg-red-500'> &lt; </div>
                 <div className='w-1/3 overflow-hidden flex flex-col gap-2 h-46'>
                     <ListItem icon={singer1} title='怀念青春' singer='酒儿' />
@@ -53,7 +53,7 @@ type ListItemProps = {
 const ListItem = ({ icon, title, singer }: ListItemProps) => {
 
     return (
-        <div className='group flex flex-row items-center gap-2 bg-gray-100 hover:bg-gray-200'>
+        <div className='group flex flex-row items-center gap-2 bg-gray-100 hover:bg-background-hover'>
             <img src={icon} className='w-14 h-14 rounded-md' />
             <div className='flex flex-col gap-2'>
                 <div className='text-sm font-light'>{title}</div>

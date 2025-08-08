@@ -14,7 +14,7 @@ const Footer = observer(() => {
     };
 
     return (
-        <div className='mt-auto h-20 bg-gray-100 w-full flex flex-row justify-between items-center'
+        <div className='mt-auto h-20 w-full flex flex-row justify-between items-center'
             onClick={handleClick}>
             <Interactions />
             <Controlbar />

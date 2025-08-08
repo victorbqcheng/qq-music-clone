@@ -80,7 +80,7 @@ const PlayListItem = ({playListId, name, icon, selected, link, showContextMenu }
     return (
         <Link to={link}>
             <Dropdown key={name} menu={{ items }} open={showContextMenu} trigger={['contextMenu']}>
-                <div className={`flex flex-row items-center gap-2 p-2 hover:bg-gray-100 rounded-lg cursor-pointer ${selected ? 'bg-gray-200' : ''}`}>
+                <div className={`flex flex-row items-center gap-2 p-2 hover:bg-background-hover rounded-lg cursor-pointer ${selected ? 'bg-background-hover' : ''}`}>
                     {icon}
                     {
                         isRenaming ? (

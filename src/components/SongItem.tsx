@@ -8,7 +8,7 @@ import { Dropdown, MenuProps } from "antd";
 import customPlayListsStore, { isPredefinedList } from "../store/customPlayListsStore";
 import { observer } from "mobx-react-lite";
 import { ItemType } from "antd/es/menu/interface";
-import { useState } from "react";
+import React, { useState } from "react";
 import Overlay from "./Overlay";
 
 type SongItemProps = {
@@ -35,7 +35,7 @@ const SongItem = observer(({ index, file, selected, onClick, onDelete, onPlay }:
         if (playList.files.some(f => f.filePath === file.filePath)) {
             isInPlayList = true;    // 如果歌单中已经有了此歌曲，则不允许再次添加, 禁止菜单项
         }
-        let menuItem: ItemType = {
+        const menuItem: ItemType = {
             label: (
                 <div className="select-none"
                     onClick={(e) => { !isInPlayList && customPlayListsStore.addFileToPlayList(id, file) }}
@@ -65,7 +65,7 @@ const SongItem = observer(({ index, file, selected, onClick, onDelete, onPlay }:
     return (
         <>
             {overlayVisible && <Overlay onClick={() => setOverlayVisible(false)} />}
-            <div className={`group flex flex-row items-center justify-between py-2 ${isEven||selected||isHovered ? 'bg-gray-200' : 'bg-gray-100'}`}
+            <div className={`group flex flex-row items-center justify-between py-2 ${isEven||selected||isHovered ? 'bg-background-hover' : 'bg-background'}`}
                 onDoubleClick={handleDoubleClick}
                 onClick={() => onClick && onClick(index)}
                 onMouseEnter={() => setIsHovered(true)}

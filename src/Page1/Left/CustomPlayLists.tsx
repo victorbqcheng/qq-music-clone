@@ -89,7 +89,7 @@ const CreateNewItem = ({ name, onBlur }: CreateNewItemProps) => {
 
     return (
         <>
-            <div className={`flex flex-row items-center gap-2 p-2 hover:bg-gray-100 rounded-lg cursor-pointer`}>
+            <div className={`flex flex-row items-center gap-2 p-2 rounded-lg cursor-pointer`}>
                 {null}
                 <input className='text-sm text-gray-700'
                     ref={inputRef}

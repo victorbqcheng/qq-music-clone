@@ -4,7 +4,7 @@ import Right from './Right/Right'
 
 const Page1 = () => {
     return (
-        <div className='flex h-screen w-screen min-w-[870px] min-h-[690px] bg-gray-100 select-none overflow-hidden'>
+        <div className='flex h-screen w-screen min-w-[870px] min-h-[690px] bg-background select-none overflow-hidden'>
             <Left />
             <Right />
         </div>

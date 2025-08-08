@@ -26,7 +26,7 @@
  * ```
  */
 
-import { StrictMode } from 'react'
+import React, { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client';
 import App from './app';
 import './index.css';
@@ -40,6 +40,7 @@ import CustomPlayListPage from './Page1/Right/Main/CustomePlayList/CustomPlayLis
 import { PlayerContextProvider } from './context/PlayerContext';
 import '@ant-design/v5-patch-for-react-19';
 import Tray from './tray/tray';
+import Theme from './Page1/Right/Main/Theme/Theme';
 
 
 // const root = createRoot(document.body);
@@ -58,6 +59,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="local-and-download" element={<LocalAndDownload />} />
             <Route path="trial" element={<Trial />} />
             <Route path="custome-playlist/:id" element={<CustomPlayListPage />} />
+            <Route path='/theme' element={<Theme />} />
 
             {/* Add a 404 route */}
             <Route path="*" element={<div>404 Not Found</div>} />
