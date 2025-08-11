@@ -41,6 +41,7 @@ import { PlayerContextProvider } from './context/PlayerContext';
 import '@ant-design/v5-patch-for-react-19';
 import Tray from './tray/tray';
 import Theme from './Page1/Right/Main/Theme/Theme';
+import DesktopLyric from './DesktopLyric/DesktopLyric';
 
 
 // const root = createRoot(document.body);
@@ -66,6 +67,7 @@ createRoot(document.getElementById('root')).render(
 
           </Route>
           <Route path="/tray" element={<Tray />} />
+          <Route path='/desktoplyric' element={<DesktopLyric />}/>
         </Routes>
       </HashRouter>
     </PlayerContextProvider>

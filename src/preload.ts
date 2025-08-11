@@ -11,6 +11,9 @@ contextBridge.exposeInMainWorld('NativeAPI', {
     closeWindow: () => ipcRenderer.send('close-window'),
     // fullscreenWindow: () => ipcRenderer.send('fullscreen-window'),
     addFiles: () => ipcRenderer.invoke('add-files'),
+    setIgnoreMouseEvents: (ignore: boolean) => ipcRenderer.send('set-ignore-mouse-events', ignore),
+    getWindowPos: () => ipcRenderer.invoke('get-window-pos'),
+    setWindowPos: (x:number, y:number)  => ipcRenderer.send('set-window-pos', { x, y }),
 
     onMaximized: (callback: () => void) => {
         ipcRenderer.on('window-maximized', callback);

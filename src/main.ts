@@ -1,8 +1,18 @@
-import { app, BrowserWindow, nativeImage, screen, Tray } from 'electron';
+import { app, BrowserWindow, ipcMain, nativeImage, screen, Tray } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import SetupIPCHandlers from './MainProcess/SetupIPCHandlers';
 import logo from './assets/logo.png'
+import { pathToFileURL } from 'url';
+
+let addon;
+if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+  addon = require(path.join(__dirname, '../..', 'build', 'Release', 'addon.node'));
+} else {
+  addon = require(path.join(__dirname, '../../../', 'addon.node'));
+}
+
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -27,14 +37,15 @@ const createWindow = () => {
       webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
     },
-    show: false
+    show: false,
   });
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    const htmlFilePath = path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`);
+    mainWindow.loadURL(`${pathToFileURL(htmlFilePath).href}`);
   }
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
@@ -82,8 +93,8 @@ const createTrayMenuWindow = () => {
       const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
       const { x: screenX, y: screenY } = primaryDisplay.workArea;
 
-      let adjustedX = Math.max(screenX, Math.min(windowX, screenX + screenWidth - windowWidth));
-      let adjustedY = Math.max(screenY, Math.min(windowY, screenY + screenHeight - windowHeight));
+      const adjustedX = Math.max(screenX, Math.min(windowX, screenX + screenWidth - windowWidth));
+      const adjustedY = Math.max(screenY, Math.min(windowY, screenY + screenHeight - windowHeight));
 
       trayWindow.setSize(windowWidth, windowHeight);
       trayWindow.setPosition(adjustedX, adjustedY);
@@ -113,8 +124,8 @@ const createTrayMenuWindow = () => {
   const { x: screenX, y: screenY } = primaryDisplay.workArea;
 
   // 调整窗口位置，确保完全在屏幕内
-  let adjustedX = Math.max(screenX, Math.min(windowX, screenX + screenWidth - windowWidth));
-  let adjustedY = Math.max(screenY, Math.min(windowY, screenY + screenHeight - windowHeight));
+  const adjustedX = Math.max(screenX, Math.min(windowX, screenX + screenWidth - windowWidth));
+  const adjustedY = Math.max(screenY, Math.min(windowY, screenY + screenHeight - windowHeight));
 
   trayWindow = new BrowserWindow({
     width: windowWidth,
@@ -138,7 +149,8 @@ const createTrayMenuWindow = () => {
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     trayWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL + '/#/tray');
   } else {
-    trayWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html/#/tray`));
+    const htmlFilePath = path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`);
+    trayWindow.loadURL(`${pathToFileURL(htmlFilePath).href}#/tray`);
   }
 
   trayWindow.once('ready-to-show', () => {
@@ -170,12 +182,68 @@ const createTray = () => {
 
 };
 
+const createDesktopLyricWindow = () => {
+  let desktopLyricWin = new BrowserWindow({
+    width: 665 + 20,
+    height: 100 + 100,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+    },
+    modal: false,
+    show: false,
+    resizable: false, // 禁止调整大小，保持固定尺寸
+    frame: false,
+    titleBarStyle: 'hidden',
+    alwaysOnTop: true, // 保持在最前面
+    transparent: true,
+    skipTaskbar: true
+  });
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    desktopLyricWin.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL + '/#/desktoplyric');
+  } else {
+    // https://chatgpt.com/c/6899f607-7d10-8326-8405-2b8cc97daf37
+    const htmlFilePath = path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`);
+    desktopLyricWin.loadURL(`${pathToFileURL(htmlFilePath).href}#/desktoplyric`);
+  }
+
+  ipcMain.on('set-ignore-mouse-events', (event, ignore: boolean) => {
+    desktopLyricWin.setIgnoreMouseEvents(ignore, { forward: true });
+  });
+
+  desktopLyricWin.once('ready-to-show', () => {
+    desktopLyricWin.show();
+    desktopLyricWin.focus();
+  });
+
+  desktopLyricWin.on('closed', () => {
+    desktopLyricWin = null;
+  });
+
+  ipcMain.handle('get-window-pos', async () => {
+    if (!desktopLyricWin) return;
+    // if we want to use addon.getWindowPos, we need to multiply the dpiScale
+    return desktopLyricWin.getPosition();
+  });
+  ipcMain.on('set-window-pos', (event, { x, y }) => {
+    if (!desktopLyricWin) return;
+    const nh = desktopLyricWin.getNativeWindowHandle();
+    // win.setPosition(x, y);
+    // win.setSize(665 + 20, 100+100);
+    // There are some bugs in the Electron's setWindowPos, so we use the addon to set the position
+    addon.setWindowPos(nh.readUInt32LE(), x, y);
+  });
+
+};
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
   createTray();
+  createDesktopLyricWindow();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -1,0 +1,162 @@
+import React, { useEffect, useState } from 'react'
+import '../index.css'
+import bgimg from '../assets/slightly_lighter_transparent_image.png'
+import LyricsDisplay from '../Page2/Main/LyricsDisplay'
+import { s } from 'vite/dist/node/types.d-aGj9QkWt';
+import { useLocation } from 'react-router';
+
+const lyrics = [
+    { time: 0.0, text: "这是第一句歌词" },
+    { time: 5.0, text: "这是第二句歌词" },
+    { time: 10.0, text: "这是第三句歌词" },
+    { time: 15.0, text: "这是第四句歌词" },
+    { time: 20.0, text: "这是第五句歌词" },
+    { time: 25.0, text: "这是第六句歌词" },
+    { time: 30.0, text: "这是第七句歌词" },
+    { time: 35.0, text: "这是第八句歌词" },
+    { time: 40.0, text: "这是第九句歌词" },
+    { time: 45.0, text: "这是第十句歌词" },
+    { time: 50.0, text: "这是第十一句歌词" },
+    { time: 55.0, text: "这是第十二句歌词" },
+    { time: 60.0, text: "这是第十三句歌词" },
+    { time: 65.0, text: "这是第十四句歌词" },
+    { time: 70.0, text: "这是第十五句歌词" },
+    { time: 75.0, text: "这是第十六句歌词" },
+    { time: 80.0, text: "这是第十七句歌词" },
+
+    // 更多歌词...
+];
+
+const bg_img: React.CSSProperties = {
+    backgroundImage: `url(${bgimg})`,
+};
+
+const DesktopLyric = () => {
+    const location = useLocation();
+    
+    const [currentTime, setCurrentTime] = useState(30);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [showBackgroundAndHeader, setShowBackgroundAndHeader] = useState(true);
+    const dpiScale = window.devicePixelRatio;
+
+    useEffect(() => {
+        const channel = new BroadcastChannel('update_current_time');
+        const handleUpdateCurrentTime = (event: MessageEvent) => {
+            if (event.data.type === 'update_current_time') {
+                setCurrentTime(event.data.currentTime);
+            }
+        };
+        channel.addEventListener('message', handleUpdateCurrentTime);
+        return () => {
+            channel.removeEventListener('message', handleUpdateCurrentTime);
+            channel.close();
+        }
+    }, []);
+
+    useEffect(() => {
+        // 根据当前时间找到对应的歌词行
+        let newIndex = 0;
+        for (let i = 0; i < lyrics.length; i++) {
+            if (lyrics[i].time <= currentTime) {
+                newIndex = i;
+            } else {
+                break;
+            }
+        }
+        setActiveIndex(newIndex);
+    }, [currentTime]);
+
+    useEffect(()=>{
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let winStartX = 0;
+        let winStartY = 0;
+        const handleMouseDown = async (e: MouseEvent) => {
+            isDragging = true;
+            startX = e.screenX;
+            startY = e.screenY;
+            [winStartX, winStartY] = await window.NativeAPI.getWindowPos();
+
+        };
+        const handleMouseMove = (e: MouseEvent) => {
+            if (isDragging) {
+                const deltaX = (e.screenX - startX) * dpiScale;
+                const deltaY = (e.screenY - startY) * dpiScale;
+                window.NativeAPI.setWindowPos(winStartX * dpiScale + deltaX, winStartY * dpiScale + deltaY);
+            }
+        };
+        const handleMouseUp = () => {
+            isDragging = false;
+        }
+        window.addEventListener('mousedown', handleMouseDown);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+        return () => {
+            window.removeEventListener('mousedown', handleMouseDown);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [dpiScale]);
+
+
+    const onMouseEnter = (e: React.MouseEvent) => {
+        console.log('mouse enter', e.clientX, e.clientY);
+        setShowBackgroundAndHeader(true);
+        window.NativeAPI.setIgnoreMouseEvents(false);
+    }
+    const onMouseLeave = (e: React.MouseEvent) => {
+        console.log('mouse leave', e.clientX, e.clientY);
+        setShowBackgroundAndHeader(false);
+        window.NativeAPI.setIgnoreMouseEvents(true);
+    }
+
+    const Content1 = () => {
+        return (
+            <div className='h-screen w-screen relative p-[10px] bg-gray-100'>
+                <div className='relative h-full w-full' onMouseLeave={onMouseLeave} >
+                    {showBackgroundAndHeader && <img src={bgimg} className='h-full w-full' />}
+
+                    {showBackgroundAndHeader && <div className='bg-blue-300 absolute top-0 left-0 h-8 right-0'>header</div>}
+
+                    <div className=' absolute top-8 left-0 bottom-0 right-0 flex flex-col items-center justify-center' >
+                        <div className='text-white bg-green-300 text-4xl font-bold text-center select-none'
+                            onMouseEnter={onMouseEnter}>
+                            <div>{lyrics[activeIndex].text}</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        )
+    };
+
+    const Content2 = () => {
+        return (
+            <div className='h-screen w-screen relative p-[10px] bg-gray-100/0 select-none'>
+                <div className={`w-full  flex flex-col items-center ${showBackgroundAndHeader ? 'bg-gray-500/60' : 'bg-gray-500/0'}`}
+                    onMouseLeave={onMouseLeave}>
+
+                    <div className={`bg-blue-300/0 w-full h-10 flex flex-row items-center justify-center ${showBackgroundAndHeader ? 'opacity-100' : 'opacity-0'}`}>header</div>
+
+                    <div className='bg-yellow-300/0 min-h-20 w-full flex flex-col items-center py-8'>
+                        <div className='bg-red-300/0 text-center text-4xl font-bold grid-cols-1 gap-2'
+                            onMouseEnter={onMouseEnter}>
+                            <div>{lyrics[activeIndex].text}</div>
+                            {/* <div>Line 2</div> */}
+                        </div>
+                    </div>
+
+                    {/* <div>footer</div> */}
+
+                </div>
+            </div>
+        );
+    };
+
+    return Content2();
+}
+
+
+
+export default DesktopLyric

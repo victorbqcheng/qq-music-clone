@@ -49,7 +49,7 @@ const LyricsDisplay = ({ lyrics, currentTime }: LyricsDisplayProps) => {
     }, [activeIndex]);
 
     return (
-        <div className="lyrics-container">
+        <div className="lyrics-container select-none">
             {/* 顶部渐变遮罩 */}
             <div className="mask top-mask"></div>
 

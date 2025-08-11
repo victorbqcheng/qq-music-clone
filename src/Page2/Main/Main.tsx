@@ -29,9 +29,9 @@ import { usePlayer } from '../../context/PlayerContext';
     ];
 
 const Main = () => {
-    const [currentTime, setCurrentTime] = useState(0);
+    // const [currentTime, setCurrentTime] = useState(0);
     const rotateDivRef = useRef<HTMLDivElement>(null);
-    const {state:{isPlaying, currentTrack}} = usePlayer();
+    const {state:{isPlaying, currentTrack, currentTime}} = usePlayer();
     useEffect(()=>{
         if(rotateDivRef.current){
             rotateDivRef.current.style.animationPlayState = isPlaying ? 'running' : 'paused';
@@ -48,7 +48,7 @@ const Main = () => {
             <div className='flex-1 flex flex-col items-center justify-center'>
                 <div className='flex flex-col h-2/3 w-4/5  overflow-y-auto'>
                     <LyricsDisplay lyrics={lyrics} currentTime={currentTime} />
-                    <button onClick={() => setCurrentTime(currentTime + 5)}>向下滚动</button>
+                    {/* <button onClick={() => setCurrentTime(currentTime + 5)}>向下滚动</button> */}
                 </div>
             </div>
         </div>
