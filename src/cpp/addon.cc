@@ -59,11 +59,36 @@ Napi::Value MySetWindowPos(const Napi::CallbackInfo &info)
     return Napi::Boolean::New(env, false);
 }
 
+Napi::Value SetWindowLayered(const Napi::CallbackInfo &info)
+{
+    Napi::Env env = info.Env();
+    if (info.Length() < 1 || !info[0].IsNumber())
+    {
+        Napi::TypeError::New(env, "Expected one number as arguments").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    HWND hwnd = HWND(info[0].As<Napi::Number>().Uint32Value());
+    auto style = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
+
+    // 添加分层样式
+    style |= WS_EX_LAYERED;
+
+    if (SetWindowLongPtrW(hwnd, GWL_EXSTYLE, style))
+    {
+        // 成功设置分层样式
+        return Napi::Boolean::New(env, true);
+    }
+    // 设置失败，抛出异常
+    Napi::Error::New(env, "Failed to set window layered style").ThrowAsJavaScriptException();
+    return Napi::Boolean::New(env, false);
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
     exports.Set(Napi::String::New(env, "hello"), Napi::Function::New(env, Method));
     exports.Set(Napi::String::New(env, "getWindowPos"), Napi::Function::New(env, GetWindowPos));
     exports.Set(Napi::String::New(env, "setWindowPos"), Napi::Function::New(env, MySetWindowPos));
+    exports.Set(Napi::String::New(env, "setWindowLayered"), Napi::Function::New(env, SetWindowLayered));
 
     return exports;
 }

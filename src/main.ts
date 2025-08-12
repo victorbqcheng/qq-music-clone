@@ -12,7 +12,7 @@ if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
   addon = require(path.join(__dirname, '../../../', 'addon.node'));
 }
 
-
+app.disableHardwareAcceleration();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -208,10 +208,6 @@ const createDesktopLyricWindow = () => {
     desktopLyricWin.loadURL(`${pathToFileURL(htmlFilePath).href}#/desktoplyric`);
   }
 
-  ipcMain.on('set-ignore-mouse-events', (event, ignore: boolean) => {
-    desktopLyricWin.setIgnoreMouseEvents(ignore, { forward: true });
-  });
-
   desktopLyricWin.once('ready-to-show', () => {
     desktopLyricWin.show();
     desktopLyricWin.focus();
@@ -219,6 +215,10 @@ const createDesktopLyricWindow = () => {
 
   desktopLyricWin.on('closed', () => {
     desktopLyricWin = null;
+  });
+
+  desktopLyricWin.once('show', ()=>{
+    addon.setWindowLayered(desktopLyricWin.getNativeWindowHandle().readUInt32LE());
   });
 
   ipcMain.handle('get-window-pos', async () => {

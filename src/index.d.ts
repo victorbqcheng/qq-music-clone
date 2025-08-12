@@ -12,7 +12,6 @@ declare global {
             closeWindow?: () => void;
             fullscreenWindow?: () => void;
             addFiles?: () => Promise<AudioFileInfo[]>;
-            setIgnoreMouseEvents?: (ignore: boolean) => void;
             getWindowPos?: () => Promise<[number, number]>;
             setWindowPos?: (x: number, y: number) => void;
 

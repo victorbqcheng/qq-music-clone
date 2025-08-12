@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import '../index.css'
 import bgimg from '../assets/slightly_lighter_transparent_image.png'
-import LyricsDisplay from '../Page2/Main/LyricsDisplay'
-import { s } from 'vite/dist/node/types.d-aGj9QkWt';
-import { useLocation } from 'react-router';
+import { AiOutlineStepForward, AiOutlineStepBackward } from "react-icons/ai";
+import { IoPlaySharp, IoPauseSharp } from "react-icons/io5";
+import Logo from '../assets/logo.svg?react';
+
 
 const lyrics = [
     { time: 0.0, text: "这是第一句歌词" },
@@ -32,7 +33,6 @@ const bg_img: React.CSSProperties = {
 };
 
 const DesktopLyric = () => {
-    const location = useLocation();
     
     const [currentTime, setCurrentTime] = useState(30);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -103,12 +103,10 @@ const DesktopLyric = () => {
     const onMouseEnter = (e: React.MouseEvent) => {
         console.log('mouse enter', e.clientX, e.clientY);
         setShowBackgroundAndHeader(true);
-        window.NativeAPI.setIgnoreMouseEvents(false);
     }
     const onMouseLeave = (e: React.MouseEvent) => {
         console.log('mouse leave', e.clientX, e.clientY);
         setShowBackgroundAndHeader(false);
-        window.NativeAPI.setIgnoreMouseEvents(true);
     }
 
     const Content1 = () => {
@@ -137,7 +135,7 @@ const DesktopLyric = () => {
                 <div className={`w-full  flex flex-col items-center ${showBackgroundAndHeader ? 'bg-gray-500/60' : 'bg-gray-500/0'}`}
                     onMouseLeave={onMouseLeave}>
 
-                    <div className={`bg-blue-300/0 w-full h-10 flex flex-row items-center justify-center ${showBackgroundAndHeader ? 'opacity-100' : 'opacity-0'}`}>header</div>
+                    <Header show={showBackgroundAndHeader} />
 
                     <div className='bg-yellow-300/0 min-h-20 w-full flex flex-col items-center py-8'>
                         <div className='bg-red-300/0 text-center text-4xl font-bold grid-cols-1 gap-2'
@@ -157,6 +155,24 @@ const DesktopLyric = () => {
     return Content2();
 }
 
+type HeaderProps = {
+    show: boolean;
+};
 
+const Header = ({show}:HeaderProps)=>{
+    return (
+        <div className={`bg-blue-300/0 w-full h-10 flex flex-row items-center justify-center ${show ? 'opacity-100' : 'opacity-0'}`}>
+            {/* left */}
+            <div className='flex items-center justify-start text-gray-400 text-xl'>
+                {/* <img src={logoSvg} className='cursor-pointer h-4 w-4 mr-2' /> */}
+                <Logo style={{width:'15px', height:'15px', }} className='cursor-pointer hover:text-gray-200' />
+                
+                <AiOutlineStepBackward className='cursor-pointer hover:text-gray-200' />
+                <IoPlaySharp className='cursor-pointer hover:text-gray-200' />
+                <AiOutlineStepForward className='cursor-pointer hover:text-gray-200' />
+            </div>
+        </div>
+    );
+};
 
 export default DesktopLyric
