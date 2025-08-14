@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld('NativeAPI', {
     closeMainWindow: () => ipcRenderer.send('close-main-window'),
     // fullscreenWindow: () => ipcRenderer.send('fullscreen-window'),
     addFiles: () => ipcRenderer.invoke('add-files'),
-    getWindowPos: () => ipcRenderer.invoke('get-window-pos'),
+    getWindowPos: () => ipcRenderer.sendSync('get-window-pos'),
     setWindowPos: (x:number, y:number)  => ipcRenderer.send('set-window-pos', { x, y }),
     showDesktopLyricWindow: () => ipcRenderer.send('show-desktop-lyric-window'),
     hideDesktopLyricWindow: () => ipcRenderer.send('hide-desktop-lyric-window'),

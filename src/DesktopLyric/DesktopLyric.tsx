@@ -72,11 +72,12 @@ const DesktopLyric = () => {
         let startY = 0;
         let winStartX = 0;
         let winStartY = 0;
-        const handleMouseDown = async (e: MouseEvent) => {
+        const handleMouseDown = (e: MouseEvent) => {
             isDragging = true;
             startX = e.screenX;
             startY = e.screenY;
-            [winStartX, winStartY] = await window.NativeAPI.getWindowPos();
+            [winStartX, winStartY] = window.NativeAPI.getWindowPos();
+            console.log('winStartPos:', winStartX, winStartY);
 
         };
         const handleMouseMove = (e: MouseEvent) => {

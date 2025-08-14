@@ -226,10 +226,11 @@ const createDesktopLyricWindow = () => {
     //
   });
 };
-ipcMain.handle('get-window-pos', async () => {
+ipcMain.on('get-window-pos', (event) => {
   if (!desktopLyricWin) return;
   // if we want to use addon.getWindowPos, we need to multiply the dpiScale
-  return desktopLyricWin.getPosition();
+  const pos = desktopLyricWin.getPosition();
+  event.returnValue = pos;
 });
 ipcMain.on('set-window-pos', (event, { x, y }) => {
   if (!desktopLyricWin) return;
