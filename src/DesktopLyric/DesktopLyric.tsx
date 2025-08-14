@@ -36,7 +36,7 @@ const DesktopLyric = () => {
     
     const [currentTime, setCurrentTime] = useState(30);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [showBackgroundAndHeader, setShowBackgroundAndHeader] = useState(true);
+    const [showBackgroundAndHeader, setShowBackgroundAndHeader] = useState(false);
     const dpiScale = window.devicePixelRatio;
 
     useEffect(() => {

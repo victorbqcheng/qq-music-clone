@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld('NativeAPI', {
     addFiles: () => ipcRenderer.invoke('add-files'),
     getWindowPos: () => ipcRenderer.invoke('get-window-pos'),
     setWindowPos: (x:number, y:number)  => ipcRenderer.send('set-window-pos', { x, y }),
+    showDesktopLyricWindow: () => ipcRenderer.send('show-desktop-lyric-window'),
+    hideDesktopLyricWindow: () => ipcRenderer.send('hide-desktop-lyric-window'),
 
     onMaximized: (callback: () => void) => {
         ipcRenderer.on('window-maximized', callback);

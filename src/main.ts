@@ -182,9 +182,9 @@ const createTray = () => {
   });
 
 };
-
+let desktopLyricWin: BrowserWindow | null = null;
 const createDesktopLyricWindow = () => {
-  let desktopLyricWin = new BrowserWindow({
+  desktopLyricWin = new BrowserWindow({
     width: 665 + 20,
     height: 100 + 100,
     webPreferences: {
@@ -193,7 +193,7 @@ const createDesktopLyricWindow = () => {
       preload: path.join(__dirname, 'preload.js'),
     },
     modal: false,
-    show: false,
+    show: true,
     resizable: false, // 禁止调整大小，保持固定尺寸
     frame: false,
     titleBarStyle: 'hidden',
@@ -210,33 +210,53 @@ const createDesktopLyricWindow = () => {
   }
 
   desktopLyricWin.once('ready-to-show', () => {
-    desktopLyricWin.show();
-    desktopLyricWin.focus();
+    addon.setWindowLayered(desktopLyricWin.getNativeWindowHandle().readUInt32LE());
+
+    // there are some bugs in BrowserWindow's show/hide and setOpacity, so we use setSize to simulate show/hide
+    desktopLyricWin.setResizable(true);
+    desktopLyricWin.setSize(0, 0);
+    desktopLyricWin.setResizable(false);
   });
 
   desktopLyricWin.on('closed', () => {
     desktopLyricWin = null;
   });
 
-  desktopLyricWin.once('show', ()=>{
-    addon.setWindowLayered(desktopLyricWin.getNativeWindowHandle().readUInt32LE());
+  desktopLyricWin.once('show', () => {
+    //
   });
-
-  ipcMain.handle('get-window-pos', async () => {
-    if (!desktopLyricWin) return;
-    // if we want to use addon.getWindowPos, we need to multiply the dpiScale
-    return desktopLyricWin.getPosition();
-  });
-  ipcMain.on('set-window-pos', (event, { x, y }) => {
-    if (!desktopLyricWin) return;
-    const nh = desktopLyricWin.getNativeWindowHandle();
-    // win.setPosition(x, y);
-    // win.setSize(665 + 20, 100+100);
-    // There are some bugs in the Electron's setWindowPos, so we use the addon to set the position
-    addon.setWindowPos(nh.readUInt32LE(), x, y);
-  });
-
 };
+ipcMain.handle('get-window-pos', async () => {
+  if (!desktopLyricWin) return;
+  // if we want to use addon.getWindowPos, we need to multiply the dpiScale
+  return desktopLyricWin.getPosition();
+});
+ipcMain.on('set-window-pos', (event, { x, y }) => {
+  if (!desktopLyricWin) return;
+  const nh = desktopLyricWin.getNativeWindowHandle();
+  // win.setPosition(x, y);
+  // win.setSize(665 + 20, 100+100);
+  // There are some bugs in the Electron's setWindowPos, so we use the addon to set the position
+  addon.setWindowPos(nh.readUInt32LE(), x, y);
+});
+ipcMain.on('show-desktop-lyric-window', () => {
+  if (desktopLyricWin) {
+    // desktopLyricWin.show();
+    // desktopLyricWin.setOpacity(1.0); // Show the window with full opacity
+    desktopLyricWin.setResizable(true);
+    desktopLyricWin.setSize(665 + 20, 100 + 100);
+    desktopLyricWin.setResizable(false);
+  }
+});
+ipcMain.on('hide-desktop-lyric-window', () => {
+  if (desktopLyricWin) {
+    // desktopLyricWin.hide();
+    // desktopLyricWin.setOpacity(0.0); // Hide the window by setting opacity to 0
+    desktopLyricWin.setResizable(true);
+    desktopLyricWin.setSize(0, 0);
+    desktopLyricWin.setResizable(false);
+  }
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

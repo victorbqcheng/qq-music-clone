@@ -14,6 +14,8 @@ declare global {
             addFiles?: () => Promise<AudioFileInfo[]>;
             getWindowPos?: () => Promise<[number, number]>;
             setWindowPos?: (x: number, y: number) => void;
+            showDesktopLyricWindow?: () => void;
+            hideDesktopLyricWindow?: () => void;
 
             onMaximized?: (callback: () => void) => ()=>void;
             onUnmaximized?: (callback: () => void) => ()=>void;
