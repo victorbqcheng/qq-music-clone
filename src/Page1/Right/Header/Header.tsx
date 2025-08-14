@@ -36,7 +36,7 @@ const Header = observer(() => {
         window.NativeAPI?.maximizeWindow();
     }
     const handleClose = () => {
-        window.NativeAPI?.closeWindow();
+        window.NativeAPI?.closeMainWindow();
     }
     useEffect(()=>{
         const unsubscribeMaximized = window.NativeAPI?.onMaximized(() => {

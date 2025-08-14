@@ -19,7 +19,7 @@ const Header = ({ onFullscreen }: HeaderProps) => {
         window.NativeAPI?.maximizeWindow();
     }
     const handleClose = () => {
-        window.NativeAPI?.closeWindow();
+        window.NativeAPI?.closeMainWindow();
     }
 
     useEffect(() => {

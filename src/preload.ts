@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('NativeAPI', {
     quit: () => ipcRenderer.send('quit'),
     minimizeWindow: () => ipcRenderer.send('minimize-window'),
     maximizeWindow: () => ipcRenderer.send('maximize-window'),
-    closeWindow: () => ipcRenderer.send('close-window'),
+    closeMainWindow: () => ipcRenderer.send('close-main-window'),
     // fullscreenWindow: () => ipcRenderer.send('fullscreen-window'),
     addFiles: () => ipcRenderer.invoke('add-files'),
     getWindowPos: () => ipcRenderer.invoke('get-window-pos'),

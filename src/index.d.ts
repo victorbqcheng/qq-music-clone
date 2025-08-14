@@ -9,7 +9,7 @@ declare global {
             quit?: () => void;
             minimizeWindow?: () => void;
             maximizeWindow?: () => void;
-            closeWindow?: () => void;
+            closeMainWindow?: () => void;
             fullscreenWindow?: () => void;
             addFiles?: () => Promise<AudioFileInfo[]>;
             getWindowPos?: () => Promise<[number, number]>;

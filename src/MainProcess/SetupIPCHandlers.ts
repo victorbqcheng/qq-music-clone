@@ -58,10 +58,11 @@ const SetupIPCHandlers = () => {
             }
         }
     });
-    ipcMain.on('close-window', () => {
+    ipcMain.on('close-main-window', () => {
         const focusedWindow = BrowserWindow.getFocusedWindow();
         if (focusedWindow) {
-            focusedWindow.close();
+            // focusedWindow.close();
+            app.quit();
         }
     });
     ipcMain.on('fullscreen-window', () => {

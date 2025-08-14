@@ -28,6 +28,7 @@ const createWindow = () => {
     height: 690,
     minWidth: 1050,
     minHeight: 690,
+    icon: nativeImage.createFromDataURL(logo),
     // alwaysOnTop: true,
     frame: true,
     titleBarStyle: 'hidden',

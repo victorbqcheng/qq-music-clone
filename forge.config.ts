@@ -12,7 +12,8 @@ const config: ForgeConfig = {
     asar: true,
     extraResource:[
       "build/Release/addon.node"
-    ]
+    ],
+    icon: './logo.ico',
   },
   rebuildConfig: {},
   makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
