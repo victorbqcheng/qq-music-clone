@@ -78,6 +78,9 @@ const Controlbar = observer(() => {
     useEffect(()=>{
         const channel = new BroadcastChannel('update_current_time');
         channel.postMessage({ type: 'update_current_time', currentTime: currentTime });
+        return ()=>{
+            channel.close();
+        }
     }, [currentTime]);
 
     const handleOnSliderChange = (value: number) => {
