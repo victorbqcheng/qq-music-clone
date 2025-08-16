@@ -35,7 +35,6 @@ const bg_img: React.CSSProperties = {
 const DesktopLyric = () => {
     
     const [currentTime, setCurrentTime] = useState(30);
-    const [activeIndex, setActiveIndex] = useState(0);
     const [showBackgroundAndHeader, setShowBackgroundAndHeader] = useState(false);
     const dpiScale = window.devicePixelRatio;
 
@@ -52,9 +51,7 @@ const DesktopLyric = () => {
             channel.close();
         }
     }, []);
-
-    useEffect(() => {
-        // 根据当前时间找到对应的歌词行
+    const getActiveIndex = ()=>{
         let newIndex = 0;
         for (let i = 0; i < lyrics.length; i++) {
             if (lyrics[i].time <= currentTime) {
@@ -63,8 +60,9 @@ const DesktopLyric = () => {
                 break;
             }
         }
-        setActiveIndex(newIndex);
-    }, [currentTime]);
+        return newIndex;
+    };
+    const activeIndex = getActiveIndex();    
 
     useEffect(()=>{
         let isDragging = false;

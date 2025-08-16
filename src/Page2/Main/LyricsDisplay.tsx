@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './LyricsDisplay.css';
 
+// 歌词数据结构示例:
+// lyrics = [
+//   { time: 0.0, text: "第一句歌词" },
+//   { time: 5.3, text: "第二句歌词" },
+//   ...
+// ]
+
 type LyricsDisplayProps = {
     lyrics: { time: number; text: string }[]; // 歌词数据
     currentTime: number; // 当前播放时间
 };
 
 const LyricsDisplay = ({ lyrics, currentTime }: LyricsDisplayProps) => {
-    const [activeIndex, setActiveIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // 歌词数据结构示例:
-    // lyrics = [
-    //   { time: 0.0, text: "第一句歌词" },
-    //   { time: 5.3, text: "第二句歌词" },
-    //   ...
-    // ]
-
-    useEffect(() => {
-        // 根据当前时间找到对应的歌词行
+    const getActiveIndex = ()=>{
         let newIndex = 0;
         for (let i = 0; i < lyrics.length; i++) {
             if (lyrics[i].time <= currentTime) {
@@ -27,8 +25,9 @@ const LyricsDisplay = ({ lyrics, currentTime }: LyricsDisplayProps) => {
                 break;
             }
         }
-        setActiveIndex(newIndex);
-    }, [currentTime, lyrics]);
+        return newIndex;
+    };
+    const activeIndex = getActiveIndex();    
 
     useEffect(() => {
         // 滚动到当前活跃的歌词行
