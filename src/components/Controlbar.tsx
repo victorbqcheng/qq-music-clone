@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Dropdown, MenuProps, Popover, Slider } from "antd";
 import { TfiLoop } from "react-icons/tfi";
 import { AiOutlineStepForward, AiOutlineStepBackward } from "react-icons/ai";
@@ -50,6 +50,61 @@ const Controlbar = observer(() => {
     }, [isPlaying, currentTrack, volume]);
 
     useEffect(() => {
+        const channel = new BroadcastChannel('update_current_time');
+        channel.postMessage({ type: 'update_current_time', currentTime: currentTime });
+        return () => {
+            channel.close();
+        }
+    }, [currentTime]);
+
+    const handleOnSliderChange = (value: number) => {
+        setSliderChangeStart(true);
+        setThisCurrentTime(value);
+    };
+
+    const handleOnSliderChangeComplete = (value: number) => {
+        seekTo(value);
+        setSliderChangeStart(false);
+    };
+
+    const togglePlayPause = () => {
+        if (isPlaying) {
+            pause();
+        } else {
+            play();
+        }
+    };
+    const handlePlayPre = useCallback(() => {
+        currentPlayListStore.getAudioFiles().findIndex((f, index) => {
+            if (f.filePath === currentTrack?.filePath) {
+                const preIndex = index - 1;
+                if (preIndex >= 0) {
+                    loadTrack(currentPlayListStore.getAudioFiles()[preIndex]);
+                } else {
+                    // 如果没有上一首，则不做任何操作
+                }
+                return true; // 找到当前播放的文件，停止查找
+            }
+            return false; // 继续查找
+        });
+    }, [currentTrack, loadTrack]);
+
+    const handlePlayNext = useCallback(() => {
+        currentPlayListStore.getAudioFiles().findIndex((f, index) => {
+            if (f.filePath === currentTrack?.filePath) {
+                const nextIndex = index + 1;
+                if (nextIndex < currentPlayListStore.getAudioFiles().length) {
+                    loadTrack(currentPlayListStore.getAudioFiles()[nextIndex]);
+                } else {
+                    // 如果没有下一首，则不做任何操作
+                }
+                return true; // 找到当前播放的文件，停止查找
+            }
+            return false; // 继续查找
+        });
+    }, [currentTrack, loadTrack]);
+    
+    useEffect(() => {
         const channel = new BroadcastChannel('player_control');
         const handleControlMessage = (event: MessageEvent) => {
             if (event.data.type === 'play') {
@@ -73,62 +128,7 @@ const Controlbar = observer(() => {
             channel.removeEventListener('message', handleControlMessage);
             channel.close();
         };
-    }, [isPlaying, currentTrack, volume]);
-
-    useEffect(()=>{
-        const channel = new BroadcastChannel('update_current_time');
-        channel.postMessage({ type: 'update_current_time', currentTime: currentTime });
-        return ()=>{
-            channel.close();
-        }
-    }, [currentTime]);
-
-    const handleOnSliderChange = (value: number) => {
-        setSliderChangeStart(true);
-        setThisCurrentTime(value);
-    };
-
-    const handleOnSliderChangeComplete = (value: number) => {
-        seekTo(value);
-        setSliderChangeStart(false);
-    };
-
-    const togglePlayPause = () => {
-        if (isPlaying) {
-            pause();
-        } else {
-            play();
-        }
-    };
-    const handlePlayPre = () => {
-        currentPlayListStore.getAudioFiles().findIndex((f, index) => {
-            if (f.filePath === currentTrack?.filePath) {
-                const preIndex = index - 1;
-                if (preIndex >= 0) {
-                    loadTrack(currentPlayListStore.getAudioFiles()[preIndex]);
-                }else{
-                    // 如果没有上一首，则不做任何操作
-                }
-                return true; // 找到当前播放的文件，停止查找
-            }
-            return false; // 继续查找
-        });
-    };
-    const handlePlayNext = () => {
-        currentPlayListStore.getAudioFiles().findIndex((f, index) => {
-            if (f.filePath === currentTrack?.filePath) {
-                const nextIndex = index + 1;
-                if (nextIndex < currentPlayListStore.getAudioFiles().length) {
-                    loadTrack(currentPlayListStore.getAudioFiles()[nextIndex]);
-                }else{
-                    // 如果没有下一首，则不做任何操作
-                }
-                return true; // 找到当前播放的文件，停止查找
-            }
-            return false; // 继续查找
-        });
-    };
-
+    }, [play, pause, setVolume, handlePlayNext, handlePlayPre]);
     // volume control content
     const content = (
         <div className='h-40 flex flex-col items-center justify-between w-8'>
@@ -150,7 +150,7 @@ const Controlbar = observer(() => {
                 <div className='cursor-pointer bg-green-400 p-2 rounded-2xl w-10 flex flex-row items-center justify-center pointer-events-auto'
                     onClick={togglePlayPause}>
                     {
-                        isPlaying? <IoPauseSharp />:<IoPlaySharp />
+                        isPlaying ? <IoPauseSharp /> : <IoPlaySharp />
                     }
                 </div>
                 <div className='cursor-pointer hover:text-green-400 pointer-events-auto'
