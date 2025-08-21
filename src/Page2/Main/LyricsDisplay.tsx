@@ -16,7 +16,7 @@ type LyricsDisplayProps = {
 const LyricsDisplay = ({ lyrics, currentTime }: LyricsDisplayProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const getActiveIndex = ()=>{
+    const getActiveIndex = () => {
         let newIndex = 0;
         for (let i = 0; i < lyrics.length; i++) {
             if (lyrics[i].time <= currentTime) {
@@ -27,7 +27,7 @@ const LyricsDisplay = ({ lyrics, currentTime }: LyricsDisplayProps) => {
         }
         return newIndex;
     };
-    const activeIndex = getActiveIndex();    
+    const activeIndex = getActiveIndex();
 
     useEffect(() => {
         // 滚动到当前活跃的歌词行
@@ -54,14 +54,19 @@ const LyricsDisplay = ({ lyrics, currentTime }: LyricsDisplayProps) => {
 
             {/* 歌词内容区域 */}
             <div className="lyrics-content" ref={containerRef}>
-                {lyrics.map((line, index) => (
-                    <div
-                        key={index}
-                        className={`lyric-line ${index === activeIndex ? 'active' : ''}`}
-                    >
-                        {line.text}
-                    </div>
-                ))}
+                {
+                    lyrics.length === 0 && <div className='lyric-line active'>暂无歌词</div>
+                }
+                {
+                    lyrics.length > 0 && lyrics.map((line, index) => (
+                        <div
+                            key={index}
+                            className={`lyric-line ${index === activeIndex ? 'active' : ''}`}
+                        >
+                            {line.text}
+                        </div>
+                    ))
+                }
             </div>
 
             {/* 底部渐变遮罩 */}

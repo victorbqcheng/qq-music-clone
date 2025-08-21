@@ -1,14 +1,37 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
-import { AudioFileInfo } from "../types";
-import {parseFile} from "music-metadata";
+import { AudioFileInfo, LyricLine } from "../types";
+import { parseFile } from "music-metadata";
 import path from 'node:path';
 import fs from 'node:fs';
-import {uint8ArrayToBase64} from 'uint8array-extras';
+import { uint8ArrayToBase64 } from 'uint8array-extras';
+import { parseLyricTime } from "../lib/utils";
 
 const getAudioFileInfo = async (filePath: string): Promise<AudioFileInfo> => {
     // Simulate getting audio file info
     try {
         const metadata = await parseFile(filePath);
+        // 查找相同文件名的歌词文件
+        // 如果有歌词文件，读取歌词内容
+        // 这里假设歌词文件与音频文件同名，后缀为.lrc
+        const lyricFilePath = path.join(path.dirname(filePath), `${path.basename(filePath, path.extname(filePath))}.lrc`);
+        let lyricLines: LyricLine[] = [];
+        if (fs.existsSync(lyricFilePath)) {
+            const lyricContent = fs.readFileSync(lyricFilePath, 'utf-8');
+            // 这里可以进一步处理歌词内容，例如解析时间戳等
+            if (lyricContent) {
+                const tmp = lyricContent.split('\n');
+                lyricLines = tmp.map((line, _index) => {
+                    const timeStr = line.match(/\[\d+:\d+\.\d+\]/);
+                    if (timeStr === null) {
+                        return { time: 0, text: '' }; // 如果没有时间戳，默认时间为0
+                    }
+                    const time = parseLyricTime(timeStr[0]);
+                    const lyric = line.replace(timeStr[0], '')
+                    return { time: time, text: lyric };
+                });
+            }
+        }
+
         return {
             title: metadata.common.title || path.basename(filePath, path.extname(filePath)),
             artist: metadata.common.artist || '未知艺术家',
@@ -35,10 +58,39 @@ const getAudioFileInfo = async (filePath: string): Promise<AudioFileInfo> => {
     }
 };
 
+const getLyric = async (filePath:string, title:string): Promise<LyricLine[]> => {
+    let lyricLines: LyricLine[] = [];
+    if(filePath.startsWith('file://')){
+        filePath = filePath.replace('file://', '');
+    }
+    let lyricFilePath = path.join(path.dirname(filePath), `${path.basename(filePath, path.extname(filePath))}.lrc`);
+    let lyricContent = '';
+    if (fs.existsSync(lyricFilePath)) {
+        lyricContent = fs.readFileSync(lyricFilePath, 'utf-8');
+    } else {
+        lyricFilePath = path.join(path.dirname(filePath), `${title}.lrc`);
+        if(fs.existsSync(lyricFilePath))
+            lyricContent = fs.readFileSync(lyricFilePath, 'utf-8');
+    }
+    // 这里可以进一步处理歌词内容，例如解析时间戳等
+    if (lyricContent) {
+        const tmp = lyricContent.trim().split('\n');
+        lyricLines = tmp.map((line, _index) => {
+            const timeStr = line.match(/\[\d+:\d+\.\d+\]/);
+            if (timeStr === null) {
+                return { time: 0, text: '' }; // 如果没有时间戳，默认时间为0
+            }
+            const time = parseLyricTime(timeStr[0]);
+            const lyric = line.replace(timeStr[0], '')
+            return { time: time, text: lyric };
+        });
+    }
+    return lyricLines;
+};
 
 const SetupIPCHandlers = () => {
 
-    ipcMain.on('quit', ()=>{
+    ipcMain.on('quit', () => {
         app.quit();
     });
 
@@ -85,6 +137,11 @@ const SetupIPCHandlers = () => {
         if (result.canceled) return [];
         const audioFileInfos = await Promise.all(result.filePaths.map(getAudioFileInfo));
         return audioFileInfos;
+    });
+    ipcMain.handle('get-lyric', async (event, filePath: string, title:string) => {
+        if (!filePath) return [];
+        const lyricLines = await getLyric(filePath, title);
+        return lyricLines;
     });
 };
 

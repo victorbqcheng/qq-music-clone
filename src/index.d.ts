@@ -12,6 +12,7 @@ declare global {
             closeMainWindow?: () => void;
             fullscreenWindow?: () => void;
             addFiles?: () => Promise<AudioFileInfo[]>;
+            getLyric?: (filePath:string, title:string) => Promise<LyricLine[]>;
             getWindowPos?: () => [number, number];
             setWindowPos?: (x: number, y: number) => void;
             showDesktopLyricWindow?: () => void;

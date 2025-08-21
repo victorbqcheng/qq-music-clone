@@ -8,6 +8,7 @@ import { usePlayer } from '../context/PlayerContext';
 import { formatTime } from '../lib/utils';
 import currentPlayListStore from '../store/currentPlayListStore';
 import { observer } from 'mobx-react-lite';
+import { LyricLine } from '../types';
 
 const style: React.CSSProperties = {
     display: 'inline-block',
@@ -56,6 +57,23 @@ const Controlbar = observer(() => {
             channel.close();
         }
     }, [currentTime]);
+    useEffect(()=>{
+        let channel = new BroadcastChannel('update_lyrics');
+        const getLyric = async () => {
+            let lyrics:LyricLine[] = [];
+            if (currentTrack) {
+                lyrics = await window.NativeAPI.getLyric(currentTrack.filePath, currentTrack.title);
+                if(channel){
+                    channel.postMessage({ type: 'update_lyrics', lyrics });
+                }
+            }
+        }
+        getLyric();
+        return () => {
+            channel.close();
+            channel = null;
+        }
+    }, [currentTrack]);
 
     const handleOnSliderChange = (value: number) => {
         setSliderChangeStart(true);

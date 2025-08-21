@@ -2,6 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import {contextBridge, ipcRenderer} from 'electron';
+import { AudioFileInfo } from './types';
 
 contextBridge.exposeInMainWorld('NativeAPI', {
     ping: ()=>ipcRenderer.invoke('ping'),
@@ -11,6 +12,7 @@ contextBridge.exposeInMainWorld('NativeAPI', {
     closeMainWindow: () => ipcRenderer.send('close-main-window'),
     // fullscreenWindow: () => ipcRenderer.send('fullscreen-window'),
     addFiles: () => ipcRenderer.invoke('add-files'),
+    getLyric: (filePath:string, title:string) => ipcRenderer.invoke('get-lyric', filePath, title),
     getWindowPos: () => ipcRenderer.sendSync('get-window-pos'),
     setWindowPos: (x:number, y:number)  => ipcRenderer.send('set-window-pos', { x, y }),
     showDesktopLyricWindow: () => ipcRenderer.send('show-desktop-lyric-window'),

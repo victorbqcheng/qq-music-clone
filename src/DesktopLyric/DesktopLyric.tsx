@@ -1,32 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import '../index.css'
 import bgimg from '../assets/slightly_lighter_transparent_image.png'
 import { AiOutlineStepForward, AiOutlineStepBackward } from "react-icons/ai";
 import { IoPlaySharp, IoPauseSharp } from "react-icons/io5";
 import Logo from '../assets/logo.svg?react';
+import { LyricLine } from '../types';
 
 
-const lyrics = [
-    { time: 0.0, text: "这是第一句歌词" },
-    { time: 5.0, text: "这是第二句歌词" },
-    { time: 10.0, text: "这是第三句歌词" },
-    { time: 15.0, text: "这是第四句歌词" },
-    { time: 20.0, text: "这是第五句歌词" },
-    { time: 25.0, text: "这是第六句歌词" },
-    { time: 30.0, text: "这是第七句歌词" },
-    { time: 35.0, text: "这是第八句歌词" },
-    { time: 40.0, text: "这是第九句歌词" },
-    { time: 45.0, text: "这是第十句歌词" },
-    { time: 50.0, text: "这是第十一句歌词" },
-    { time: 55.0, text: "这是第十二句歌词" },
-    { time: 60.0, text: "这是第十三句歌词" },
-    { time: 65.0, text: "这是第十四句歌词" },
-    { time: 70.0, text: "这是第十五句歌词" },
-    { time: 75.0, text: "这是第十六句歌词" },
-    { time: 80.0, text: "这是第十七句歌词" },
+// const lyrics = [
+//     { time: 0.0, text: "这是第一句歌词" },
+//     { time: 5.0, text: "这是第二句歌词" },
+//     { time: 10.0, text: "这是第三句歌词" },
+//     { time: 15.0, text: "这是第四句歌词" },
+//     { time: 20.0, text: "这是第五句歌词" },
+//     { time: 25.0, text: "这是第六句歌词" },
+//     { time: 30.0, text: "这是第七句歌词" },
+//     { time: 35.0, text: "这是第八句歌词" },
+//     { time: 40.0, text: "这是第九句歌词" },
+//     { time: 45.0, text: "这是第十句歌词" },
+//     { time: 50.0, text: "这是第十一句歌词" },
+//     { time: 55.0, text: "这是第十二句歌词" },
+//     { time: 60.0, text: "这是第十三句歌词" },
+//     { time: 65.0, text: "这是第十四句歌词" },
+//     { time: 70.0, text: "这是第十五句歌词" },
+//     { time: 75.0, text: "这是第十六句歌词" },
+//     { time: 80.0, text: "这是第十七句歌词" },
 
-    // 更多歌词...
-];
+//     // 更多歌词...
+// ];
 
 const bg_img: React.CSSProperties = {
     backgroundImage: `url(${bgimg})`,
@@ -35,6 +36,7 @@ const bg_img: React.CSSProperties = {
 const DesktopLyric = () => {
     
     const [currentTime, setCurrentTime] = useState(30);
+    const [lyrics, setLyrics] = useState<LyricLine[]>([]);
     const [showBackgroundAndHeader, setShowBackgroundAndHeader] = useState(false);
     const dpiScale = window.devicePixelRatio;
 
@@ -51,6 +53,19 @@ const DesktopLyric = () => {
             channel.close();
         }
     }, []);
+    useEffect(() => {
+        const channel = new BroadcastChannel('update_lyrics');
+        const handleUpdateLyrics = (event: MessageEvent) => {
+            if (event.data.type === 'update_lyrics') {
+                setLyrics(event.data.lyrics);
+            }
+        };
+        channel.addEventListener('message', handleUpdateLyrics);
+        return () => {
+            channel.removeEventListener('message', handleUpdateLyrics);
+            channel.close();
+        }
+    }, []);
     const getActiveIndex = ()=>{
         let newIndex = 0;
         for (let i = 0; i < lyrics.length; i++) {
@@ -62,7 +77,7 @@ const DesktopLyric = () => {
         }
         return newIndex;
     };
-    const activeIndex = getActiveIndex();    
+    const activeIndex = getActiveIndex();
 
     useEffect(()=>{
         let isDragging = false;
@@ -128,6 +143,17 @@ const DesktopLyric = () => {
         )
     };
 
+    const DisplayLyric = ()=>{
+        // return <div className={`w-1/2 h-10 ${showBackgroundAndHeader ? 'bg-gray-500/0' : 'bg-gray-500/60'}`}></div>
+        if(lyrics.length > 0){
+            if(lyrics[activeIndex].text === ''){
+                return <div className={`w-1/2 h-10 ${showBackgroundAndHeader ? 'bg-gray-500/0' : 'bg-gray-500/60'}`}></div>
+            }
+            return <div>{lyrics[activeIndex].text}</div>
+        }
+        return <div>暂无歌词</div>
+    };
+
     const Content2 = () => {
         return (
             <div className='h-screen w-screen relative p-[10px] bg-gray-100/0 select-none'>
@@ -137,10 +163,11 @@ const DesktopLyric = () => {
                     <Header show={showBackgroundAndHeader} />
 
                     <div className='bg-yellow-300/0 min-h-20 w-full flex flex-col items-center py-8'>
-                        <div className='bg-red-300/0 text-center text-4xl font-bold grid-cols-1 gap-2'
+                        <div className='bg-red-300/0 w-full flex flex-row justify-center text-center text-4xl font-bold grid-cols-1 gap-2'
                             onMouseEnter={onMouseEnter}>
-                            <div>{lyrics[activeIndex].text}</div>
-                            {/* <div>Line 2</div> */}
+                            {
+                                DisplayLyric()
+                            }
                         </div>
                     </div>
 

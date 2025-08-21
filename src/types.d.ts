@@ -1,4 +1,9 @@
 
+export declare interface LyricLine{
+    time: number; // Time in seconds
+    text: string; // Lyric text
+}
+
 export declare interface AudioFileInfo {
     title: string;
     artist: string;
