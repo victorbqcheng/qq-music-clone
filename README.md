@@ -30,6 +30,7 @@ npm start
 ```
 
 ![截图](image.png "image")
+![截图](image2.png "image")
 
 ## Project Structure
 
