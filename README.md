@@ -29,6 +29,8 @@ npm install
 npm start
 ```
 
+![截图](image.png "image")
+
 ## Project Structure
 
 ```
@@ -38,9 +40,14 @@ npm start
 ```
 
 ## TODO:
+
 - Tray
 - Theme
 - Desktop lyric
+- log
+- icon
+- English
+- Database, sqlite or mysql
 
 ## License
 
